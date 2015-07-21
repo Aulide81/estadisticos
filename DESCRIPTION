@@ -1,11 +1,9 @@
 Package: estadisticos
 Type: Package
 Title: Herramientas para el analisis de datos
-Version: 1.7
-Date: 2015-06-21
+Version: 1.8
+Date: 2015-07-22
 Author: Emilio Arenas <emiliojat@gmail.com>
 Maintainer: Emilio Arenas <emiliojat@gmail.com>
 Description: Este paquete proporciona diferentes utilidades para el analisis univariado,bivariado y multivariado, entre otras funciones
 License: GPL
-NeedsCompilation: no
-Packaged: 2015-06-21 21:48:35 UTC; Emilio

@@ -500,14 +500,6 @@ cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selec
   
   totalx<-prop.table(rowSums(absolutos))*100
   
-  if (!missing(orden)){
-    if(orden=="d"){
-      absolutos<-absolutos[rev(order(totalx)),]
-    }else if(orden=="a"){
-      absolutos<-absolutos[order(totalx),]
-    }
-  }
-  
   filapct<-prop.table(absolutos,1)*100
   colpct<-prop.table(absolutos,2)*100
   totpct<-prop.table(absolutos)*100
@@ -525,6 +517,24 @@ cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selec
   
   totpct<-cbind(totpct,totalx)
   totpct<-rbind(totpct,c(totaly,100))
+
+if (!missing(orden)){
+  if(orden=="d"){
+    orden<-rev(order(totalx))
+    absolutos<-absolutos[orden,]
+    orden<-c(orden,length(orden)+1)
+    filapct<-filapct[orden,]
+    colpct<-colpct[orden,]
+    totpct<-totpct[orden,]
+  }else if(orden=="a"){
+    orden<-order(totalx)
+    absolutos<-absolutos[orden,]
+    orden<-c(orden,length(orden)+1)
+    filapct<-filapct[orden,]
+    colpct<-colpct[orden,]
+    totpct<-totpct[orden,]
+  }
+}
   
 if (is.numeric(x) & !is.null(attr(x, "val.lab"))) {
 indices <- as.numeric(rownames(absolutos))
@@ -547,17 +557,15 @@ etiquetasy<-c("",paste(indices,etiquetasy),"Total")
 }  
 
 
-
   absolutos<-cbind(absolutos,"Total"=rowSums(absolutos))
   absolutos<-rbind(absolutos,"Total"=colSums(absolutos))
   
   absolutos<-round(absolutos,0)
-  
+
   tabla<-NULL
   for (i in 1:nrow(absolutos)){
     tabla<-rbind(tabla,absolutos[i,],filapct[i,],colpct[i,],totpct[i,])
   }
-
 
 
   tabla<-cbind(rep(etiquetasx,each=4),rep(c("count","row","col","tot"),nrow(absolutos)),tabla)
@@ -683,6 +691,7 @@ cmeans<-function(x,y,w,dec=2,stat="Mean",title="",ancho=12,Totcol=T,selectrow,se
 
 multiresp<-function(x,y,w,orden,resp=F,dec=1,cells="count",title="",ancho=12,Totrow=T,Totcol=T,selectrow,selectcol){
   
+  
   if (missing(y)) {
     y<-rep("siny",length(x[[1]]))
     }
@@ -719,17 +728,38 @@ multiresp<-function(x,y,w,orden,resp=F,dec=1,cells="count",title="",ancho=12,Tot
   totaly<-tapply(w,y,sum,na.rm=T)
   totaly<-ifelse(is.na(totaly),0,totaly)
   
+if (is.numeric(x[[1]]) & !is.null(attr(x[[1]],"val.lab"))){
+    indices <- as.numeric(rownames(absolutos))
+    etiquetasx<-indices%in%attr(x[[1]],"val.lab")
+    etiquetasx<-sort(c(attr(x[[1]],"val.lab"),indices[etiquetasx==F]))
+    etiquetasx<-names(etiquetasx[etiquetasx%in%indices])
+    etiquetasx<-c(paste(indices,etiquetasx),"Total")
+} else {
+    etiquetasx <- c(rownames(absolutos), "Total")
+}
+  
+  if (is.numeric(y) & !is.null(attr(y,"val.lab"))){
+    indices <- as.numeric(colnames(absolutos))
+    etiquetasy<-indices%in%attr(y,"val.lab")
+    etiquetasy<-sort(c(attr(y,"val.lab"),indices[etiquetasy==F]))
+    etiquetasy<-names(etiquetasy[etiquetasy%in%indices])
+    etiquetasy<-c("",paste(indices,etiquetasy),"Total")  
+  } else {
+    etiquetasy <- c("", colnames(absolutos), "Total")
+  }
+  
   if (!missing(orden)){
     if(orden=="d"){
       absolutos<-absolutos[rev(order(totalx)),]
+      etiquetasx<-etiquetasx[c(rev(order(totalx)),length(totalx)+1)]
       totalx<-totalx[rev(order(totalx))]
     }else if(orden=="a"){
       absolutos<-absolutos[order(totalx),]
+      etiquetasx<-etiquetasx[c(order(totalx),length(totalx)+1)]
       totalx<-totalx[order(totalx)]
     }
   }
   
-    
 if (resp==T){
     filapct<-prop.table(absolutos,1)*100
     colpct<-prop.table(absolutos,2)*100
@@ -761,25 +791,6 @@ if (resp==T){
     totpct<-rbind(totpct,c(prop.table(totaly)*100,100))
 }
   
-if (is.numeric(x[[1]]) & !is.null(attr(x[[1]],"val.lab"))){
-  indices <- as.numeric(rownames(absolutos))
-  etiquetasx<-indices%in%attr(x[[1]],"val.lab")
-  etiquetasx<-sort(c(attr(x[[1]],"val.lab"),indices[etiquetasx==F]))
-  etiquetasx<-names(etiquetasx[etiquetasx%in%indices])
-  etiquetasx<-c(paste(indices,etiquetasx),"Total")
-} else {
-etiquetasx <- c(rownames(absolutos), "Total")
-}
-
-if (is.numeric(y) & !is.null(attr(y,"val.lab"))){
-  indices <- as.numeric(colnames(absolutos))
-  etiquetasy<-indices%in%attr(y,"val.lab")
-  etiquetasy<-sort(c(attr(y,"val.lab"),indices[etiquetasy==F]))
-  etiquetasy<-names(etiquetasy[etiquetasy%in%indices])
-  etiquetasy<-c("",paste(indices,etiquetasy),"Total")  
-} else {
-  etiquetasy <- c("", colnames(absolutos), "Total")
-}
   
   if (resp==T){
     absolutos<-cbind(absolutos,"Total"=rowSums(absolutos))
@@ -1275,7 +1286,7 @@ comul<-function(x,ncp,sufix){
     if (length(sufix)!=length(x)) stop("Introduzca un numero de sufijos igual al de tabla que contiene la lista")
   }
   
-  tablam<-x[[1]]
+  tablam<-x[[1]]/sum(x[[1]])
   for (k in 2:length(x)) tablam <- tablam + x[[k]]
   tablam<-tablam/length(x)
   
@@ -1353,7 +1364,7 @@ vallab<-gtools::defmacro(df,var,val,
                            if (!is.numeric(val)) stop("El vector ha de ser numerico")
                            if (length(names(val)) == 0) stop("La variable def se ha introducido sin etiquetas")
                            if (length(unique(val)) != length(val)) stop("valores repetidos")
-                           attr(df$var,"val.lab")<-val
+                           attr(df$var,"val.lab")<-sort(val)
                          })
 
 addvallab<-gtools::defmacro(df,var,val,
