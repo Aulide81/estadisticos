@@ -1287,7 +1287,7 @@ comul<-function(x,ncp,sufix){
   }
   
   tablam<-x[[1]]/sum(x[[1]])
-  for (k in 2:length(x)) tablam <- tablam + x[[k]]
+  for (k in 2:length(x)) tablam <- tablam + x[[k]]/sum(x[[k]])
   tablam<-tablam/length(x)
   
   if (missing(ncp)) ncp<-min(dim(tablam))
