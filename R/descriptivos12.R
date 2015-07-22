@@ -1286,8 +1286,8 @@ comul<-function(x,ncp,sufix){
     if (length(sufix)!=length(x)) stop("Introduzca un numero de sufijos igual al de tabla que contiene la lista")
   }
   
-  tablam<-x[[1]]/sum(x[[1]])
-  for (k in 2:length(x)) tablam <- tablam + x[[k]]/sum(x[[k]])
+  tablam<-x[[1]]
+  for (k in 2:length(x)) tablam <- tablam + x[[k]]
   tablam<-tablam/length(x)
   
   if (missing(ncp)) ncp<-min(dim(tablam))
