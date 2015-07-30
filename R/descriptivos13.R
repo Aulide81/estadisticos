@@ -484,7 +484,6 @@ return(bbdd)
 
 cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selectrow,selectcol){
 
-  
   if (is.null(x)) stop("La variable x no existe")  
   if (is.null(y)) stop("La variable y no existe")  
   if (missing(w)) w<-rep(1,length(x))
@@ -518,24 +517,6 @@ cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selec
   totpct<-cbind(totpct,totalx)
   totpct<-rbind(totpct,c(totaly,100))
 
-if (!missing(orden)){
-  if(orden=="d"){
-    orden<-rev(order(totalx))
-    absolutos<-absolutos[orden,]
-    orden<-c(orden,length(orden)+1)
-    filapct<-filapct[orden,]
-    colpct<-colpct[orden,]
-    totpct<-totpct[orden,]
-  }else if(orden=="a"){
-    orden<-order(totalx)
-    absolutos<-absolutos[orden,]
-    orden<-c(orden,length(orden)+1)
-    filapct<-filapct[orden,]
-    colpct<-colpct[orden,]
-    totpct<-totpct[orden,]
-  }
-}
-  
 if (is.numeric(x) & !is.null(attr(x, "val.lab"))) {
 indices <- as.numeric(rownames(absolutos))
 etiquetasx<-indices%in%attr(x,"val.lab")
@@ -560,6 +541,24 @@ etiquetasy<-c("",paste(indices,etiquetasy),"Total")
   absolutos<-cbind(absolutos,"Total"=rowSums(absolutos))
   absolutos<-rbind(absolutos,"Total"=colSums(absolutos))
   
+if (!missing(orden)){
+  if(orden=="d"){
+  ord<-c(rev(order(absolutos[,ncol(absolutos)][-nrow(absolutos)])),nrow(absolutos))
+  absolutos<-absolutos[ord,]
+  filapct<-filapct[ord,]
+  colpct<-colpct[ord,]
+  totpct<-totpct[ord,]
+  etiquetasx<-etiquetasx[ord]
+  }else if(orden=="a"){
+  ord<-order(absolutos[,ncol(absolutos)])
+  absolutos<-absolutos[ord,]
+  filapct<-filapct[ord,]
+  colpct<-colpct[ord,]
+  totpct<-totpct[ord,]
+  etiquetasx<-etiquetasx[ord]
+  }
+}
+
   absolutos<-round(absolutos,0)
 
   tabla<-NULL
