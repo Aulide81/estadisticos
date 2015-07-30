@@ -175,64 +175,56 @@ print.tabla<-function (x){
   }
 }
 
-frec<-function (x, w, orden, dec = 1, selectcol){
-  if(missing(w)) w<-rep(1,length(x))
-  Frequency.val<-suppressWarnings(rowsum(w,x,na.rm=T))
-  if(any(is.na(rownames(Frequency.val)))){
-  nmis<-Frequency.val[nrow(Frequency.val),1]  
-  rownames(Frequency.val)[nrow(Frequency.val)]<-"NA's"
-  }else{
-    nmis<-0
-  }
-  Frequency.val<-Frequency.val[complete.cases(Frequency.val),,drop=F]
-  n <- sum(Frequency.val)
-  N <- nmis+n
+frec<-function(x,w,orden,dec=1,selectcol){
   
-  indices<-rownames(Frequency.val)
+  if (missing(w)) w<-rep(1,length(x))
+
+  if (is.null(x)) stop("La variable no existe")
+  
+  N<-sum(w,na.rm=T)
+  Frequency.val<-tapply(w,x,sum,na.rm=T)
+  n<-sum(Frequency.val)
   
   if (is.numeric(x) & !is.null(attr(x, "val.lab"))) {
-    etiquetas <- indices %in% attr(x, "val.lab")
-    etiquetas <- sort(c(attr(x, "val.lab"), indices[etiquetas == F]))
-    etiquetas <- names(etiquetas[etiquetas %in% indices])
-    rownames(Frequency.val) <- paste(indices, etiquetas)
+    indices <- as.numeric(rownames(Frequency.val))
+    etiquetas<-indices%in%attr(x,"val.lab")
+    etiquetas<-sort(c(attr(x,"val.lab"),indices[etiquetas==F]))
+    etiquetas<-names(etiquetas[etiquetas%in%indices])
+    rownames(Frequency.val)<-paste(indices,etiquetas)   
   }
   
-  if (round(N) > round(n)) {
-    Frequency <-Frequency.val
-    Percent <- prop.table(Frequency) * 100
-    Valid.Pct <- c(prop.table(Frequency.val[-nrow(Frequency.val),]) * 100, NA)
-    tabla <- cbind(Frequency, Percent,Valid.Pct)
+  if(round(N)>round(n)) {
+    Frequency<-c(Frequency.val,"NA's"=N-n)
+    Percent<-prop.table(Frequency)*100
+    Valid.Pct<-c(prop.table(Frequency.val)*100,NA)
+    tabla<-cbind(Frequency,Percent,Valid.Pct)  
     
-  } else {
-    Frequency <- Frequency.val
-    Percent <- prop.table(Frequency) * 100
-    Valid.Pct <- Percent
-    tabla <- cbind(Frequency, Percent, Valid.Pct)
+  }else{
+    Frequency<-Frequency.val
+    Percent<-prop.table(Frequency)*100
+    Valid.Pct<-Percent
+    tabla<-cbind(Frequency,Percent,Valid.Pct)
   }
-  
-  if (!missing(orden)) {
-    if (orden == "a") 
-      tabla <- tabla[order(tabla[, 3]), ]
-    if (orden == "d") 
-      tabla <- tabla[order(-tabla[, 3]), ]
-  }
-  tabla <- cbind(tabla, cumsum(tabla[, 3]))
-  tabla[, 1] <- round(tabla[, 1], 0)
-  tabla[, 2:4] <- round(tabla[, 2:4], dec)
-  if (!missing(selectcol)) 
-    tabla <- tabla[, selectcol, drop = F]
-  if (is.null(attr(x, "var.lab"))) 
-    attr(x, "var.lab") <- ""
-  colnames(tabla)<-c("Frequency","Percent","Valid.Pct","Cum.Pct")
-  tabla <- structure(tabla, class = c("tabla", "matrix", "frec"))
-  attr(tabla, "title") <- paste(names(as.list(attr(x, "var.lab"))), 
-                                attr(x, "var.lab"))
-  attr(tabla, "resumen") <- paste("Total Cases:", round(N, 
-                                                        0), "Valid Cases:", round(n, 0))
-  return(tabla)
-  
-}
 
+    
+  if (!missing(orden)){
+    if(orden=="a") tabla<-tabla[order(tabla[,3]),]
+    if(orden=="d") tabla<-tabla[order(-tabla[,3]),]
+  }
+  
+tabla<-cbind(tabla,Cum.Pct=cumsum(tabla[,3]))  
+tabla[,1]<-round(tabla[,1],0)  
+tabla[,2:4]<-round(tabla[,2:4],dec)  
+
+if(!missing(selectcol)) tabla<-tabla[,selectcol,drop=F]
+    
+if (is.null(attr(x,"var.lab"))) attr(x,"var.lab")<-""
+
+tabla<-structure(tabla,class=c("tabla","matrix","frec"))
+attr(tabla,"title")<-paste(names(as.list(attr(x,"var.lab"))),attr(x,"var.lab"))
+attr(tabla,"resumen")<-paste("Total Cases:",round(N,0),"Valid Cases:",round(n,0))
+return(tabla)
+}
 
 desc<-function(x,w,ntiles=1,stat=c("Mean","Std.Dev","Minimum","Maximum","Valid.N"),dec=3){
     
@@ -499,25 +491,14 @@ cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selec
   
   cells<-c("count","row","col","tot")[which(c("count","row","col","tot")%in%unique(cells))]
   
-
-  absolutos<-matrix()
-  for(i in sort(unique(y))){
-    tabla <- suppressWarnings(rowsum(w[y == i], x[y == i], 
-                                   na.rm = T))
-  colnames(tabla) <- i
-  tabla <- tabla[!is.na(rownames(tabla)), , drop = F]
-  rnabsolutos<-sort(unique(c(rownames(tabla),rownames(absolutos))))
-  absolutos <- merge(absolutos, tabla, by = 0, all = T)[,-1, drop = F]
-  rownames(absolutos)<-rnabsolutos
-  }
-  absolutos<-as.matrix(absolutos)
-
-  absolutos[is.na(absolutos)] <- 0
-  absolutos <- absolutos[!(rowSums(absolutos) == 0), !colSums(absolutos) == 
-                           0, drop = F]
-  if (all(dim(absolutos) == c(0, 0)) == T) 
-    stop("Cross is empty")
-  totalx <- prop.table(rowSums(absolutos)) * 100
+  absolutos<-tapply(w,list(x,y),sum,na.rm=T)
+  absolutos[is.na(absolutos)]<-0
+  
+  absolutos<-absolutos[!(rowSums(absolutos)==0),!colSums(absolutos)==0,drop=F]
+  
+  if (all(dim(absolutos)==c(0,0))==T) stop("Cross is empty")
+  
+  totalx<-prop.table(rowSums(absolutos))*100
   
   filapct<-prop.table(absolutos,1)*100
   colpct<-prop.table(absolutos,2)*100
@@ -880,99 +861,97 @@ return(df)
   return(tapply(x*w,y,sum,na.rm=T)/tapply(w[complete.cases(x)],y[complete.cases(x)],sum,na.rm=T))
 }
 
-
 k.means<-function (x, centers, w, iter = 10, initial, seed){
-
-if (missing(w)) 
-  w <- rep(1, nrow(x))
-if (any(is.na(w))) {
-  x <- x[complete.cases(w), , drop = F]
-  w <- w[complete.cases(w)]
-}
-if (missing(initial)) {
-  xc <- x[complete.cases(x), , drop = F]
-  if (missing(seed)) {
-    centroides <- xc[sample(1:nrow(xc), centers), ]
+  
+  if (missing(w)) 
+    w <- rep(1, nrow(x))
+  if (any(is.na(w))) {
+    x <- x[complete.cases(w), , drop = F]
+    w <- w[complete.cases(w)]
   }
+  if (missing(initial)) {
+    xc <- x[complete.cases(x), , drop = F]
+    if (missing(seed)) {
+      centroides <- xc[sample(1:nrow(xc), centers), ]
+    }
+    else {
+      set.seed(seed)
+      centroides <- xc[sample(1:nrow(xc), centers), ]
+    }
+    centroides<-as.matrix(centroides)  
+  }
+  
   else {
-    set.seed(seed)
-    centroides <- xc[sample(1:nrow(xc), centers), ]
+    if (!is.matrix(initial)) 
+      stop("Los valores iniciales han de ser una matrix")
+    if (ncol(initial) != ncol(x)) 
+      stop("El numero de columnas de initial es diferente a de x")
+    if (nrow(initial) != centers) 
+      stop("El numero de filas de initial tiene que ser igual al numero de clusters (centers)")
+    centroides <- initial
   }
-centroides<-as.matrix(centroides)  
-}
-
-else {
-  if (!is.matrix(initial)) 
-    stop("Los valores iniciales han de ser una matrix")
-  if (ncol(initial) != ncol(x)) 
-    stop("El numero de columnas de initial es diferente a de x")
-  if (nrow(initial) != centers) 
-    stop("El numero de filas de initial tiene que ser igual al numero de clusters (centers)")
-  centroides <- initial
-}
-centroidesinit <- centroides
-if (ncol(x) == 1) {
-  dim(centroidesinit) <- c(centers, ncol(x))
-  colnames(centroidesinit) <- colnames(x)
-  centroides <- centroidesinit
-}
-
-mdist <- apply(x, 1, function(x) sqrt(rowSums(sweep(centroides,2,x,FUN="-")^2)))
-grupofinal <- apply(mdist,2,which.min)
-condicion <- F
-contador <- 0
-while (condicion == F) {
-  grupoinicial <- grupofinal
-  #centroides <- apply(x, 2, .meansby, y = grupoinicial,w = w)
-  centroides <- apply(x, 2, means, y = grupoinicial,w = w,Totrow=F,stat="Mean")
+  centroidesinit <- centroides
+  if (ncol(x) == 1) {
+    dim(centroidesinit) <- c(centers, ncol(x))
+    colnames(centroidesinit) <- colnames(x)
+    centroides <- centroidesinit
+  }
+  
   mdist <- apply(x, 1, function(x) sqrt(rowSums(sweep(centroides,2,x,FUN="-")^2)))
   grupofinal <- apply(mdist,2,which.min)
-  condicion <- all(grupoinicial == grupofinal, na.rm = T)
-  contador <- contador + 1
-  if (contador == iter) {
-    warning("Se han alcanzado el numero maximo de iteraciones:", 
-            iter, call. = F)
-    break
+  condicion <- F
+  contador <- 0
+  while (condicion == F) {
+    grupoinicial <- grupofinal
+    #centroides <- apply(x, 2, .meansby, y = grupoinicial,w = w)
+    centroides <- apply(x, 2, means, y = grupoinicial,w = w,Totrow=F,stat="Mean")
+    mdist <- apply(x, 1, function(x) sqrt(rowSums(sweep(centroides,2,x,FUN="-")^2)))
+    grupofinal <- apply(mdist,2,which.min)
+    condicion <- all(grupoinicial == grupofinal, na.rm = T)
+    contador <- contador + 1
+    if (contador == iter) {
+      warning("Se han alcanzado el numero maximo de iteraciones:", 
+              iter, call. = F)
+      break
+    }
   }
+  
+  centroides <- apply(x, 2, means,y = grupofinal, w = w,Totrow=F,stat="Mean")
+  analova<-t(sapply(x,function(k){
+    tabla<-summary(aov(k~grupofinal,weights=w))
+    rbind(cbind(tabla[[1]][1,3],tabla[[1]][1,1],tabla[[1]][2,3],tabla[[1]][2,1],tabla[[1]][1,4:5]))
+  }))
+  colnames(analova)<-c("MQ Group","gl","MQ Error","gl","F","Sig")
+  
+  cociente<-sum(sapply(x,function(k)summary(aov(k~grupofinal,weights=w))[[1]][1,2]))/sum(sapply(x,function(k)sum(summary(aov(k~grupofinal,weights=w))[[1]][,2])))*100
+  cociente<-round(cociente,2)
+  
+  etiquetas <- NULL
+  for (i in 1:ncol(x)) {
+    if (is.null(attr(x[, i], "var.lab"))) 
+      attr(x[, i], "var.lab") <- ""
+    etiquetas <- c(etiquetas, attr(x[, i], "var.lab"))
+  }
+  colnames(centroides) <- paste(names(x), etiquetas)
+  rownames(centroides) <- rownames(c(1:centers), do.NULL = F, 
+                                   prefix = "Grupo.")
+  
+  centroides <- t(centroides)
+  colnames(centroidesinit) <- paste(names(x), etiquetas)
+  rownames(centroidesinit) <- rownames(c(1:centers), do.NULL = F, 
+                                       prefix = "Grupo.")
+  
+  centroidesinit <- t(centroidesinit)
+  dim(grupofinal) <- c(length(grupofinal), 1)
+  rownames(grupofinal) <- rownames(x)
+  resultados <- list(Centros_Iniciales = centroidesinit, Grupos = grupofinal, 
+                     Centros_Finales = centroides, Iterations = contador,Anova = analova)
+  print(resultados[1])
+  print(resultados[3])
+  cat("\nVariacion_Entre_Grupo/Variacion_Total =",paste(cociente,"%"),"\n\n")
+  print(resultados[5])
+  invisible(resultados)
 }
-
-centroides <- apply(x, 2, means,y = grupofinal, w = w,Totrow=F,stat="Mean")
-analova<-t(sapply(x,function(k){
-  tabla<-summary(aov(k~grupofinal,weights=w))
-  rbind(cbind(tabla[[1]][1,3],tabla[[1]][1,1],tabla[[1]][2,3],tabla[[1]][2,1],tabla[[1]][1,4:5]))
-}))
-colnames(analova)<-c("MQ Group","gl","MQ Error","gl","F","Sig")
-
-cociente<-sum(sapply(x,function(k)summary(aov(k~grupofinal,weights=w))[[1]][1,2]))/sum(sapply(x,function(k)sum(summary(aov(k~grupofinal,weights=w))[[1]][,2])))*100
-cociente<-round(cociente,2)
-
-etiquetas <- NULL
-for (i in 1:ncol(x)) {
-  if (is.null(attr(x[, i], "var.lab"))) 
-    attr(x[, i], "var.lab") <- ""
-  etiquetas <- c(etiquetas, attr(x[, i], "var.lab"))
-}
-colnames(centroides) <- paste(names(x), etiquetas)
-rownames(centroides) <- rownames(c(1:centers), do.NULL = F, 
-                                 prefix = "Grupo.")
-
-centroides <- t(centroides)
-colnames(centroidesinit) <- paste(names(x), etiquetas)
-rownames(centroidesinit) <- rownames(c(1:centers), do.NULL = F, 
-                                     prefix = "Grupo.")
-
-centroidesinit <- t(centroidesinit)
-dim(grupofinal) <- c(length(grupofinal), 1)
-rownames(grupofinal) <- rownames(x)
-resultados <- list(Centros_Iniciales = centroidesinit, Grupos = grupofinal, 
-                   Centros_Finales = centroides, Iterations = contador,Anova = analova)
-print(resultados[1])
-print(resultados[3])
-cat("\nVariacion_Entre_Grupo/Variacion_Total =",paste(cociente,"%"),"\n\n")
-print(resultados[5])
-invisible(resultados)
-}
-
 
 
 .covariance<-function(x,y,w){
