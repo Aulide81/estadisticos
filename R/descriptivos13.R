@@ -502,10 +502,13 @@ cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selec
 
   absolutos<-matrix()
   for(i in sort(unique(y))){
-    tabla<-suppressWarnings(rowsum(w[y==i],x[y==i],na.rm=T))
-    colnames(tabla)<-i
-    tabla<-tabla[!is.na(rownames(tabla)),,drop=F]
-    absolutos<-merge(absolutos,tabla,by=0,all=T)[,-1,drop=F]
+    tabla <- suppressWarnings(rowsum(w[y == i], x[y == i], 
+                                   na.rm = T))
+  colnames(tabla) <- i
+  tabla <- tabla[!is.na(rownames(tabla)), , drop = F]
+  rnabsolutos<-sort(unique(c(rownames(tabla),rownames(absolutos))))
+  absolutos <- merge(absolutos, tabla, by = 0, all = T)[,-1, drop = F]
+  rownames(absolutos)<-rnabsolutos
   }
   absolutos<-as.matrix(absolutos)
 
