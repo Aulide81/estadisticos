@@ -371,6 +371,8 @@ means<-function(x,y,w,stat=c("Mean","Std.Dev","Valid.N"),Totrow=T,dec=2,selectro
 filtro<-function (df, ...) {
   
   bd <- droplevels(subset(df, ...))
+  dimbd<-dim(bd)
+  rownamesbd<-rownames(bd)
   if (nrow(bd) == 0) 
     stop("La base de datos filtrada no contiene ninguna observacion")
   if (ncol(bd) == 0) 
@@ -380,11 +382,11 @@ filtro<-function (df, ...) {
     attributes(y) <- attributes(x)
     return(y)
   }
-  bbdd <- as.data.frame(mapply(copyattr, df[, indices], bd[,indices], 
+  bd <- as.data.frame(mapply(copyattr, df[, indices,drop=F], bd[,indices,drop=F], 
                                SIMPLIFY = F))
-  if(any(dim(bbdd)==dim(bd))==F) bbdd<-t(bbdd)
-  rownames(bbdd) <- rownames(bd)
-  return(bbdd)
+  if(any(dim(bd)==dimbd)==F) bd<-t(bd)
+  rownames(bd) <- rownamesbd
+  return(bd)
 }
 
 list.var<-function(str,df){
