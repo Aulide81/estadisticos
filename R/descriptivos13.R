@@ -1250,53 +1250,91 @@ fusion<-function(df1,df2,...){
 }
 
 comul<-function(x,ncp,sufix){
-  
+
   require(FactoMineR)
-  
-  if (class(x)!="list") stop("Las tablas han de ser introducidas como una list()")
-  if (length(x)<2) stop("Para una sola tabla haz un Analisis de Correspondencia Simple")
-  if (length(apply(sapply(x,dim),1,function(k)unique(k)))!=2) stop("Las tablas han de tener las misma dimensiones")
-  
-  etiquetas<-sapply(x,names)
-  if (sum(apply(etiquetas,1,function(k)length(unique(k))))!=ncol(x[[1]])) stop("Los nombres de las columnas no coinciden")
-  
-  etiquetas<-sapply(x,rownames)
-  if (sum(apply(etiquetas,1,function(k)length(unique(k))))!=nrow(x[[1]])) stop("Los nombres de las filas no coinciden")
-  
-  if (missing(sufix)){
-    sufix<-c(1:length(x))
-  }else{
-    if (length(sufix)!=length(x)) stop("Introduzca un numero de sufijos igual al de tabla que contiene la lista")
+  if (class(x) != "list") 
+    stop("Las tablas han de ser introducidas como una list()")
+  if (length(x) < 2) 
+    stop("Para una sola tabla haz un Analisis de Correspondencia Simple")
+  if (length(apply(sapply(x, dim), 1, function(k) unique(k))) != 
+        2) 
+    stop("Las tablas han de tener las misma dimensiones")
+  etiquetas <- sapply(x, colnames)
+  if (sum(apply(etiquetas, 1, function(k) length(unique(k)))) != 
+        ncol(x[[1]])) 
+    stop("Los nombres de las columnas no coinciden")
+  etiquetas <- sapply(x, rownames)
+  if (sum(apply(etiquetas, 1, function(k) length(unique(k)))) != 
+        nrow(x[[1]])) 
+    stop("Los nombres de las filas no coinciden")
+  if (missing(sufix)) {
+    sufix <- c(1:length(x))
+  }
+  else {
+    if (length(sufix) != length(x)) 
+      stop("Introduzca un numero de sufijos igual al de tabla que contiene la lista")
   }
   
-  tablam<-x[[1]]
+  x<-lapply(x,as.data.frame)
+  
+  tablam <- x[[1]]
   for (k in 2:length(x)) tablam <- tablam + x[[k]]
-  tablam<-tablam/length(x)
+  tablam <- tablam/length(x)
+  if (missing(ncp)) 
+    ncp <- min(dim(tablam))
   
-  if (missing(ncp)) ncp<-min(dim(tablam))
-  
-  resultado<-CA(tablam,ncp=ncp,graph=F)
-  
-  tabla<-tablam
-  for (i in 1:length(x)){
-    rownames(x[[i]])<-paste(rownames(x[[i]]),sufix[i],sep="_")
+  tablasup<-NULL
+  for (i in 1:length(x)) {
     colnames(x[[i]])<-paste(colnames(x[[i]]),sufix[i],sep="_")
-    tabla<-cbind(tabla,x[[i]])
+    tablasup <- cbind(tablasup,as.matrix(x[[i]]))
   }
   
-  ressupc<-CA(tabla,ncp=ncp,col.sup=(ncol(tablam)+1):(ncol(tabla)),graph=F)
+  ncolt<-ncol(tablam)
+  nrowt<-nrow(tablam)
+  tablam<-cbind(tablam,tablasup)
   
-  tabla<-tablam
-  for (i in 1:length(x)){
-    colnames(x[[i]])<-gsub(paste("_",sufix[i],sep=""),"",colnames(x[[i]]))
-    tabla<-rbind(tabla,x[[i]])
+  resultado <- CA(tablam, ncp = ncp, col.sup=c((ncolt+1):(ncol(tablam))),graph = F)
+  
+  tablam<-tablam[,-c(((ncolt+1):(ncol(tablam)))),drop=F]
+  
+  tablasup<-NULL
+  for (i in 1:length(x)) {
+    rownames(x[[i]])<-paste(rownames(x[[i]]),sufix[i],sep="_")
+    tablasup <- rbind(tablasup,as.matrix(x[[i]]))
   }
+  colnames(tablasup)<-colnames(tablam)
+  tablam<-rbind(tablam,tablasup)
   
-  ressupf<-CA(tabla,ncp=ncp,row.sup=(nrow(tablam)+1):(nrow(tabla)),graph=F)
+  resultado$row.sup <-CA(tablam, ncp = ncp, row.sup = ((nrowt+1):(nrow(tablam))), graph = F)$row.sup
+  resultado<-structure(resultado,class=c(class(resultado),"comul"))
+  return(resultado)  
+}
+
+plot.comul<-function(x,dim=c(1,2),draw=c("col","row","col.sup","row.sup"),select){
+
+  df<-rbind(data.frame(x$col$coord,X="col"),
+            data.frame(x$row$coord,X="row"),
+            data.frame(x$col.sup$coord,X="col.sup"),
+            data.frame(x$row.sup$coord,X="row.sup"))
   
-  resultado$col.sup<-ressupc$col.sup
-  resultado$row.sup<-ressupf$row.sup
-  return(resultado)
+  limx<-c(min(df[,1]),max(df[,1]))
+  limy<-c(min(df[,2]),max(df[,2]))
+  
+  if (!missing(select))
+      df<-df[unlist(as.vector((sapply(select,function(x)grep(x,rownames(df),ignore.case=T))))),]
+    
+  df<-df[df$X%in%draw,c(dim,ncol(df))]
+
+  plot(df[,-ncol(df),drop=F],xlim=limx,ylim=limy,cex=0,cex.axis=0.6,cex.lab=0.6)
+  text(df[,-ncol(df),drop=F],rownames(df),cex=0.6,col=rainbow(nlevels(df[,ncol(df)]),v=0.6)[as.numeric(df[,ncol(df)])])
+  abline(h=0,v=0,lty=3)
+}
+
+print.comul<-function(x,...){
+  print.CA(structure(x,class=c(c("CA","list","comul"))),...)
+}
+summary.comul<-function(x,...){
+  summary.CA(structure(x,class=c(c("CA","list","comul"))),...)
 }
 
 ponderar<-function(variables,pesos,dif=1,iter=100,N){
