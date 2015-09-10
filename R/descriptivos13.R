@@ -1306,7 +1306,7 @@ comul<-function(x,ncp,sufix){
   tablam<-rbind(tablam,tablasup)
   
   resultado$row.sup <-CA(tablam, ncp = ncp, row.sup = ((nrowt+1):(nrow(tablam))), graph = F)$row.sup
-  resultado<-structure(resultado,class=c(class(resultado),"comul"))
+  resultado<-structure(resultado,class=c("list","comul"))
   return(resultado)  
 }
 
