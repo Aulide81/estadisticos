@@ -1283,31 +1283,31 @@ comul<-function(x,ncp,sufix){
   if (missing(ncp)) 
     ncp <- min(dim(tablam))
   
-  tablasup<-NULL
-  for (i in 1:length(x)) {
-    colnames(x[[i]])<-paste(colnames(x[[i]]),sufix[i],sep="_")
-    tablasup <- cbind(tablasup,as.matrix(x[[i]]))
-  }
-  
   ncolt<-ncol(tablam)
   nrowt<-nrow(tablam)
-  tablam<-cbind(tablam,tablasup)
+    
+  for (i in 1:length(x)) {
+    colnames(x[[i]])<-paste(colnames(x[[i]]),sufix[i],sep="_")
+    tablam <- cbind(tablam,x[[i]])
+  }
   
   resultado <- CA(tablam, ncp = ncp, col.sup=c((ncolt+1):(ncol(tablam))),graph = F)
   
   tablam<-tablam[,-c(((ncolt+1):(ncol(tablam)))),drop=F]
   
-  tablasup<-NULL
+  x<-lapply(x,function(k){
+    colnames(k)<-colnames(tablam)
+    return(k)})
+  
+  
   for (i in 1:length(x)) {
     rownames(x[[i]])<-paste(rownames(x[[i]]),sufix[i],sep="_")
-    tablasup <- rbind(tablasup,as.matrix(x[[i]]))
+    tablam <- rbind(tablam,x[[i]])
   }
-  colnames(tablasup)<-colnames(tablam)
-  tablam<-rbind(tablam,tablasup)
   
   resultado$row.sup <-CA(tablam, ncp = ncp, row.sup = ((nrowt+1):(nrow(tablam))), graph = F)$row.sup
   resultado<-structure(resultado,class=c("list","comul"))
-  return(resultado)  
+  return(resultado)
 }
 
 plot.comul<-function(x,dim=c(1,2),draw=c("col.sup","row.sup"),select){
