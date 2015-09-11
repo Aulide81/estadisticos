@@ -1310,15 +1310,15 @@ comul<-function(x,ncp,sufix){
   return(resultado)  
 }
 
-plot.comul<-function(x,dim=c(1,2),draw=c("col","row","col.sup","row.sup"),select){
+plot.comul<-function(x,dim=c(1,2),draw=c("col.sup","row.sup"),select){
 
   df<-rbind(data.frame(x$col$coord,X="col"),
             data.frame(x$row$coord,X="row"),
             data.frame(x$col.sup$coord,X="col.sup"),
             data.frame(x$row.sup$coord,X="row.sup"))
   
-  limx<-c(min(df[,1]),max(df[,1]))
-  limy<-c(min(df[,2]),max(df[,2]))
+  limx<-c(min(df[,dim[1]]),max(df[,dim[1]]))
+  limy<-c(min(df[,dim[2]]),max(df[,dim[2]]))
   
   if (!missing(select))
       df<-df[unlist(as.vector((sapply(select,function(x)grep(x,rownames(df),ignore.case=T))))),]
@@ -1331,10 +1331,10 @@ plot.comul<-function(x,dim=c(1,2),draw=c("col","row","col.sup","row.sup"),select
 }
 
 print.comul<-function(x,...){
-  print.CA(structure(x,class=c(c("CA","list","comul"))),...)
+  print.CA(structure(x,class=c("CA","list","comul")),...)
 }
 summary.comul<-function(x,...){
-  summary.CA(structure(x,class=c(c("CA","list","comul"))),...)
+  summary.CA(structure(x,class=c("CA","list","comul")),...)
 }
 
 ponderar<-function(variables,pesos,dif=1,iter=100,N){
