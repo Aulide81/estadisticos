@@ -23,7 +23,7 @@ Vector caracter que indica los cuatro elementos a graficar, draw=c("col","row","
 "row.sup"= Filas de las tablas suplementarias. Por defecto dibujara las filas y las columnas suplementarias.
 }
   \item{select}{
-Vector caracter que permite dibujar solo las filas que se deseen mediante el nombre de estas
+Vector caracter que permite dibujar las filas y las columnas  que se deseen mediante el nombre de estas
 }
 }
 
