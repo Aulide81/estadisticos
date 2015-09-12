@@ -1311,22 +1311,21 @@ comul<-function(x,ncp,sufix){
 }
 
 plot.comul<-function(x,dim=c(1,2),draw=c("col.sup","row.sup"),select){
-
-  df<-rbind(data.frame(x$col$coord,X="col"),
-            data.frame(x$row$coord,X="row"),
-            data.frame(x$col.sup$coord,X="col.sup"),
-            data.frame(x$row.sup$coord,X="row.sup"))
+df<-rbind(x$col$coord,x$row$coord,x$col.sup$coord,x$row.sup$coord)
   
-  limx<-c(min(df[,dim[1]]),max(df[,dim[1]]))
-  limy<-c(min(df[,dim[2]]),max(df[,dim[2]]))
+  X<-factor(c(rep("col",nrow(resultado$col$coord)),
+  rep("row",nrow(resultado$row$coord)),
+  rep("col.sup",nrow(resultado$col.sup$coord)),
+  rep("row.sup",nrow(resultado$row.sup$coord))),levels=c("col","row","col.sup","row.sup"))
   
   if (!missing(select))
       df<-df[unlist(as.vector((sapply(select,function(x)grep(x,rownames(df),ignore.case=T))))),]
     
-  df<-df[df$X%in%draw,c(dim,ncol(df))]
-
-  plot(df[,-ncol(df),drop=F],xlim=limx,ylim=limy,cex=0,cex.axis=0.6,cex.lab=0.6)
-  text(df[,-ncol(df),drop=F],rownames(df),cex=0.6,col=rainbow(nlevels(df[,ncol(df)]),v=0.6)[as.numeric(df[,ncol(df)])])
+  df<-df[X%in%draw,dim,drop=F]
+  X<-X[X%in%draw]
+  
+  plot(df,cex=0,cex.axis=0.6,cex.lab=0.6)
+  text(df,rownames(df),cex=0.6,col=rainbow(nlevels(X),v=0.6)[as.numeric(X)])
   abline(h=0,v=0,lty=3)
 }
 
