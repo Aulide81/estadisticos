@@ -1312,10 +1312,10 @@ comul<-function(x,ncp,sufix){
 
 plot.comul<-function(x,dim=c(1,2),draw=c("col.sup","row.sup"),select){
 
-X <- factor(c(rep("col", nrow(resultado$col$coord)), 
-              rep("row",nrow(resultado$row$coord)),
-              rep("col.sup", nrow(resultado$col.sup$coord)), 
-              rep("row.sup", nrow(resultado$row.sup$coord))),
+X <- factor(c(rep("col", nrow(x$col$coord)), 
+              rep("row",nrow(x$row$coord)),
+              rep("col.sup", nrow(x$col.sup$coord)), 
+              rep("row.sup", nrow(x$row.sup$coord))),
               levels = c("col","row", "col.sup", "row.sup"))
 
 df<-data.frame(rbind(x$col$coord,x$row$coord,x$col.sup$coord,x$row.sup$coord),Puntos=X)
