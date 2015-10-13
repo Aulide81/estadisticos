@@ -1281,7 +1281,7 @@ comul<-function(x,ncp,sufix){
   for (k in 2:length(x)) tablam <- tablam + x[[k]]
   tablam <- tablam/length(x)
   if (missing(ncp)) 
-    ncp <- min(dim(tablam))
+    ncp <- min(dim(tablam))-1
   
   ncolt<-ncol(tablam)
   nrowt<-nrow(tablam)
