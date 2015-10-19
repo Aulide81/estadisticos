@@ -1381,12 +1381,14 @@ ponderar<-function(variables,pesos,dif=1,iter=100,N){
 
 varlab<-gtools::defmacro(df,var,val,
                          expr={
+                           if(!as.character(substitute(var))%in%names(df)) stop("La variable no existe")
                            attr(df$var,"var.lab")<-val
                            names(attr(df$var,"var.lab"))<-as.character(substitute(var))
                          })
 
 vallab<-gtools::defmacro(df,var,val,
                          expr={
+                           if(!as.character(substitute(var))%in%names(df)) stop("La variable no existe")
                            if (!is.numeric(val)) stop("El vector ha de ser numerico")
                            if (length(names(val)) == 0) stop("La variable def se ha introducido sin etiquetas")
                            if (length(unique(val)) != length(val)) stop("valores repetidos")
@@ -1395,6 +1397,7 @@ vallab<-gtools::defmacro(df,var,val,
 
 addvallab<-gtools::defmacro(df,var,val,
                             expr={
+                              if(!as.character(substitute(var))%in%names(df)) stop("La variable no existe")
                               if (!is.numeric(val)) stop("El vector ha de ser numerico")
                               if (length(names(val)) == 0) stop("La variable def se ha introducido sin etiquetas")
                               if (length(unique(val)) != length(val)) stop("valores repetidos")
