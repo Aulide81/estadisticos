@@ -1401,10 +1401,10 @@ addvallab<-gtools::defmacro(df,var,val,
                               if (!is.numeric(val)) stop("El vector ha de ser numerico")
                               if (length(names(val)) == 0) stop("La variable def se ha introducido sin etiquetas")
                               if (length(unique(val)) != length(val)) stop("valores repetidos")
-                              val<-sort(val)
                               a<-attr(df$var,"val.lab")
-                              if (length(a[a%in%val])>0) names(a)[a[a%in%val]]<-names(val)[val%in%a[a%in%val]]
-                              attr(df$var,"val.lab")<-sort(c(a,val[!val%in%a[a%in%val]]))
+                              bal<-sort(val)
+                              if (length(a[a%in%bal])>0) names(a)[a[a%in%bal]]<-names(bal)[bal%in%a[a%in%bal]]
+                              attr(df$var,"val.lab")<-sort(c(a,bal[!bal%in%a[a%in%bal]]))
                             })
 sumar<-function(...){
   x<-cbind(...)
