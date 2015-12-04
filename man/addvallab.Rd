@@ -2,10 +2,10 @@
 \alias{addvallab}
 
 \title{
-Añadir etiquetas de valor
+Ingresar/Modificar etiquetas de valor
 }
 \description{
-Funcion que permite añadir definiciones de valores a una variable con valores ya definidos
+Funcion que permite ingresar/modificar definiciones de valores a una variable con valores ya definidos
 }
 \usage{
 addvallab(df,var,val)
