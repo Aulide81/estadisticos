@@ -481,7 +481,12 @@ list.val<-function(x){
 if (is.null(x)) stop("La variable no existe")
 if (is.null(attr(x, "val.lab"))) stop("La variable no tiene definido ningun nivel")
 bbdd<-data.frame(Label=names(attr(x, "val.lab")),Value = attr(x, "val.lab"),stringsAsFactors = T)
+bbdd<-structure(bbdd,class=c("data.frame","list.val")
 return(bbdd)
+}
+
+print.list.val<-function(x){
+if ("list.val"%in%class(x)) print(x,row.names=F)
 }
 
 cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selectrow,selectcol){
