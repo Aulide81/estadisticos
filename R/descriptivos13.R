@@ -480,7 +480,7 @@ compfactor<-function(x){
 list.val<-function(x){
 if (is.null(x)) stop("La variable no existe")
 if (is.null(attr(x, "val.lab"))) stop("La variable no tiene definido ningun nivel")
-bbdd<-data.frame(Label=names(attr(x, "val.lab")),Valor = attr(x, "val.lab"),stringsAsFactors = T)
+bbdd<-data.frame(Label=names(attr(x, "val.lab")),Value = attr(x, "val.lab"),stringsAsFactors = T)
 return(bbdd)
 }
 
