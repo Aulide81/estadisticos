@@ -8,7 +8,6 @@ Maintainer: Emilio Arenas <emiliojat@gmail.com>
 Description: Este paquete proporciona diferentes utilidades para el analisis univariado,bivariado y multivariado, entre otras funciones
 License: GPL
 URL: https://github.com/Aulide81/estadisticos
-LazyLoad: yes
-LazyData: yes
+LazyLoad: TRUE
+LazyData: TRUE
 VignetteBuilder: knitr
-Type: Package
