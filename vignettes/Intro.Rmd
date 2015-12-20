@@ -1,7 +1,12 @@
 ---
 title: "Introduccion Paquete Estadisticos"
 author: "Emilio Arenas"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 Este es un breve tutorial introductorio para el manejo del paquete **estadisticos** que podreis encontrar en el siguiente repositorio de github <https://github.com/Aulide81/estadisticos.git>
@@ -15,7 +20,7 @@ data(cars)
 str(mtcars)
 ```
 
-La base de datos esta formada por 11 variables, todas numéricas y 32 observaciones. Al ser un base datos típica de R, la única manera de identificar sus variables es mediante su nombre. Así que lo primero que haremos es definir sus variables con alguna descripcipción que nos diga algo más sobre ellas.
+La base de datos esta formada por 11 variables, todas numÃ©ricas y 32 observaciones. Al ser un base datos tÃ­pica de R, la Ãºnica manera de identificar sus variables es mediante su nombre. AsÃ­ que lo primero que haremos es definir sus variables con alguna descripcipciÃ³n que nos diga algo mÃ¡s sobre ellas.
 
 ```{r,comment=NA}
 library(estadisticos)
@@ -34,7 +39,7 @@ varlab(mtcars,carb,	"Number of carburetors")
 str(mtcars)
 ```
 
-Una vez definidos las variables, podremos ver algunos descriptivos para las variables númericas.
+Una vez definidos las variables, podremos ver algunos descriptivos para las variables nÃºmericas.
 
 ```{r,comment=NA}
 desc(mtcars$mpg)
