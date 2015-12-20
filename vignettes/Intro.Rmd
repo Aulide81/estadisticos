@@ -1,10 +1,12 @@
 ---
 title: "Introduccion Paquete Estadisticos"
 author: "Emilio Arenas"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Demostracion paquete estadisticos}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 Este es un breve tutorial introductorio para el manejo del paquete **estadisticos** que podreis encontrar en el siguiente repositorio de github <https://github.com/Aulide81/estadisticos.git>
 
