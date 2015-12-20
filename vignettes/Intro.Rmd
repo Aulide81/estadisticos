@@ -2,11 +2,11 @@
 title: "Introduccion Paquete Estadisticos"
 author: "Emilio Arenas"
 output: html_document
----
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Demostracion paquete estadisticos}
 -->
+---
 Este es un breve tutorial introductorio para el manejo del paquete **estadisticos** que podreis encontrar en el siguiente repositorio de github <https://github.com/Aulide81/estadisticos.git>
 
 La filosofia de este paquete es la de proporcionar una herramientas y unos outputs para los que estamos familiarizados con el software comercial SPSS.
