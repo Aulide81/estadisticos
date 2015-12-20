@@ -2,6 +2,7 @@
 title: "Introduccion Paquete Estadisticos"
 author: "Emilio Arenas"
 output: html_document
+vignette:
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Demostracion paquete estadisticos}
