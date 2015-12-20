@@ -3,7 +3,8 @@ title: "Introduccion Paquete Estadisticos"
 author: "Emilio Arenas"
 output: html_document
 vignette: >
-  %\VignetteEngine{knitr::knitr} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteIndexEntry{Introduccion}
 ---
 
 Este es un breve tutorial introductorio para el manejo del paquete **estadisticos** que podreis encontrar en el siguiente repositorio de github <https://github.com/Aulide81/estadisticos.git>
