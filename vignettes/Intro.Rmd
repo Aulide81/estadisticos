@@ -1,9 +1,7 @@
 ---
 title: "Introduccion Paquete estadisticos"
 author: "Emilio Arenas"
-output: html_document:
-    highlight: tango
-    theme: united
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
