@@ -1,8 +1,9 @@
 ---
-title: "Introduccion Paquete Estadisticos"
+title: "Introduccion Paquete estadisticos"
 author: "Emilio Arenas"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::html_vignette:
+    highlight: tango
+    theme: united
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
