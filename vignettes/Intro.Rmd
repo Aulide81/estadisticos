@@ -5,7 +5,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 Este es un breve tutorial introductorio para el manejo del paquete **estadisticos** que podreis encontrar en el siguiente repositorio de github <https://github.com/Aulide81/estadisticos.git>
