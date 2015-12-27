@@ -484,134 +484,123 @@ bbdd<-data.frame(Label=names(attr(x, "val.lab")),Value = attr(x, "val.lab"),stri
 return(bbdd)
 }
 
-cross<-function(x,y,w,cells="count",dec=1,orden,ancho=12,Totrow=T,Totcol=T,selectrow,selectcol){
-
-  if (is.null(x)) stop("La variable x no existe")  
-  if (is.null(y)) stop("La variable y no existe")  
-  if (missing(w)) w<-rep(1,length(x))
+cross<-function (x, y, w, cells = "count", dec = 1, order, ancho = 12, 
+          Totrow = T, Totcol = T, selectrow, selectcol) 
+{
   
-  cells<-c("count","row","col","tot")[which(c("count","row","col","tot")%in%unique(cells))]
+if (is.null(x)) 
+    stop("La variable x no existe")
+  if (is.null(y)) 
+    stop("La variable y no existe")
+  if (missing(w)) 
+    w <- rep(1, length(x))
   
-  absolutos<-tapply(w,list(x,y),sum,na.rm=T)
-  absolutos[is.na(absolutos)]<-0
+  cells <- c("count", "row", "col", "tot")[which(c("count", 
+                                                   "row", "col", "tot") %in% unique(cells))]
+  absolutos <- tapply(w, list(x, y), sum, na.rm = T)
+  absolutos[is.na(absolutos)] <- 0
   
-  absolutos<-absolutos[!(rowSums(absolutos)==0),!colSums(absolutos)==0,drop=F]
   
-  if (all(dim(absolutos)==c(0,0))==T) stop("Cross is empty")
+  absolutos <- absolutos[!(rowSums(absolutos) == 0), !colSums(absolutos) == 
+                           0, drop = F]
+  if (all(dim(absolutos) == c(0, 0)) == T)  stop("Cross is empty")
   
-  totalx<-prop.table(rowSums(absolutos))*100
   
-  filapct<-prop.table(absolutos,1)*100
   colpct<-prop.table(absolutos,2)*100
+  filapct<-prop.table(absolutos,1)*100
   totpct<-prop.table(absolutos)*100
   
-  totalx<-prop.table(rowSums(absolutos))*100
-  totaly<-prop.table(colSums(absolutos))*100
-  
-  filapct<-cbind(filapct,rowSums(filapct))
-  filapct<-rbind(filapct,c(totaly,100))
-  
-  
-  colpct<-rbind(colpct,colSums(colpct))
-  colpct<-cbind(colpct,c(totalx,100))
-  
-  
-  totpct<-cbind(totpct,totalx)
-  totpct<-rbind(totpct,c(totaly,100))
-
-if (is.numeric(x) & !is.null(attr(x, "val.lab"))) {
-indices <- as.numeric(rownames(absolutos))
-etiquetasx<-indices%in%attr(x,"val.lab")
-etiquetasx<-sort(c(attr(x,"val.lab"),indices[etiquetasx==F]))
-etiquetasx<-names(etiquetasx[etiquetasx%in%indices])
-etiquetasx<-c(paste(indices,etiquetasx),"Total")
-}else{
-etiquetasx <- c(rownames(absolutos), "Total")
-}
-
-if (is.numeric(y) & !is.null(attr(y, "val.lab"))) {
-indices <- as.numeric(colnames(absolutos))
-etiquetasy<-indices%in%attr(y,"val.lab")
-etiquetasy<-sort(c(attr(y,"val.lab"),indices[etiquetasy==F]))
-etiquetasy<-names(etiquetasy[etiquetasy%in%indices])
-etiquetasy<-c("",paste(indices,etiquetasy),"Total")   
-} else {
-  etiquetasy <- c("", colnames(absolutos), "Total")
-}  
-
-
-  absolutos<-cbind(absolutos,"Total"=rowSums(absolutos))
-  absolutos<-rbind(absolutos,"Total"=colSums(absolutos))
-  
-if (!missing(orden)){
-  if(orden=="d"){
-  ord<-c(rev(order(absolutos[,ncol(absolutos)][-nrow(absolutos)])),nrow(absolutos))
-  absolutos<-absolutos[ord,]
-  filapct<-filapct[ord,]
-  colpct<-colpct[ord,]
-  totpct<-totpct[ord,]
-  etiquetasx<-etiquetasx[ord]
-  }else if(orden=="a"){
-  ord<-order(absolutos[,ncol(absolutos)])
-  absolutos<-absolutos[ord,]
-  filapct<-filapct[ord,]
-  colpct<-colpct[ord,]
-  totpct<-totpct[ord,]
-  etiquetasx<-etiquetasx[ord]
+  if (is.numeric(x) & !is.null(attr(x, "val.lab"))) {
+    indices <- as.numeric(rownames(absolutos))
+    etiquetas <- indices %in% attr(x, "val.lab")
+    etiquetas <- sort(c(attr(x, "val.lab"), indices[etiquetas==F]))
+    etiquetas <- names(etiquetas[etiquetas %in% indices])
+    rownames(absolutos) <- paste(indices, etiquetas)
   }
-}
+  
+  if (is.numeric(x) & !is.null(attr(y, "val.lab"))) {
+    indices <- as.numeric(colnames(absolutos))
+    etiquetas <- indices %in% attr(y, "val.lab")
+    etiquetas <- sort(c(attr(y, "val.lab"), indices[etiquetas==F]))
+    etiquetas <- names(etiquetas[etiquetas %in% indices])
+    colnames(absolutos) <- paste(indices, etiquetas)
+  }
+  
+  
+if(!missing(order)){
+    if(order%in%c("a","d")){
+      if(order=="a"){
+        orden<-order(rowSums(absolutos))
+        absolutos<-absolutos[orden,]
+        colpct<-colpct[orden,]
+        filapct<-filapct[orden,]
+        totpct<-totpct[orden,]
+        
+      }else{
+        orden<-order(-rowSums(tabla))
+        absolutos<-absolutos[orden,]
+        colpct<-colpct[orden,]
+        filapct<-filapct[orden,]
+        totpct<-totpct[orden,]
+      }  
+    }
+  }
+  
+  
+  
+  absolutos<-addmargins(absolutos,FUN=list(Total=sum),quiet=T)
+  colpct<-addmargins(colpct,FUN=list(Total=sum),quiet=T)
+  filapct<-addmargins(filapct,FUN=list(Total=sum),quiet=T)
+  totpct<-addmargins(totpct,FUN=list(Total=sum),quiet=T)
+  
+  absolutos <- round(absolutos, 0)
 
-  absolutos<-round(absolutos,0)
-
-  tabla<-NULL
-  for (i in 1:nrow(absolutos)){
-    tabla<-rbind(tabla,absolutos[i,],filapct[i,],colpct[i,],totpct[i,])
+  tabla <- NULL
+  for (i in 1:nrow(absolutos)) {
+    tabla <- rbind(tabla, absolutos[i, ], filapct[i, ], 
+                   colpct[i, ], totpct[i, ])
   }
 
-
-  tabla<-cbind(rep(etiquetasx,each=4),rep(c("count","row","col","tot"),nrow(absolutos)),tabla)
-
-  tabla<-tabla[which(tabla[,2]%in%cells),-2]
-  etiquetasx<-tabla[,1]
-  etiquetasx[-c(seq(1,length(etiquetasx),length(cells)))]<-""
-  tabla[,1]<-etiquetasx
-  colnames(tabla)<-etiquetasy
-
-  etiquetasy<-colnames(tabla)
-  
-  pct<-cells
-  pct<-ifelse(pct!="count",paste(pct,"%",sep=""),pct)
-  pct<-paste(pct,collapse = ", ")
-  
-  if (is.null(attr(x,"var.lab"))) attr(x,"var.lab")<-""
-  if (is.null(attr(y,"var.lab"))) attr(y,"var.lab")<-""
-
-  
-  rownames(tabla)<-tabla[,1]
-  tabla<-tabla[,-1,drop=F]
-  tabla<-apply(tabla,2,function(x)as.numeric(x))
-  rownames(tabla)<-etiquetasx   
-
-
-  if (Totcol==F) tabla<-tabla[,-ncol(tabla),drop=F]
-  if (Totrow==F) tabla<-tabla[-(nrow(tabla):((nrow(tabla)-(length(cells)-1)))),,drop=F]
-
-  if (!missing(selectrow)) tabla<-tabla[selectrow,,drop=F]
-  if (!missing(selectcol)) tabla<-tabla[,selectcol,drop=F]
-    
-  if (is.null(attr(x,"var.lab"))) attr(x,"var.lab")<-""
-  if (is.null(attr(y,"var.lab"))) attr(y,"var.lab")<-""
-  
-  tabla<-structure(tabla,class=c("tabla","matrix","cross"))
-  attr(tabla,"formato")<-cumsum(rep(length(cells),nrow(absolutos))[-1])
-  attr(tabla,"pct")<-pct
-  attr(tabla,"resumen")<-paste("Number of Missing Observations:",round(sum(w,na.rm=T),0)-absolutos[nrow(absolutos),ncol(absolutos)])
-  attr(tabla,"title")<-paste(names(as.list(attr(x,"var.lab"))),attr(x,"var.lab"),"by",names(as.list(attr(y,"var.lab"))),attr(y,"var.lab"))
-  attr(tabla,"ancho")<-ancho
-  attr(tabla,"dec")<-dec
+rownames(tabla)<-paste(rep(rownames(absolutos), each = 4))
+pct<-rep(c("count","row", "col", "tot"),nrow(absolutos))
+tabla<-tabla[which(pct %in% cells),,drop=F]
+rownames(tabla)[-c(seq(1, length(rownames(tabla)), length(cells)))] <- ""  
+  pct <- cells
+  pct <- ifelse(pct != "count", paste(pct, "%", sep = ""), 
+                pct)
+  pct <- paste(pct, collapse = ", ")
+  if (is.null(attr(x, "var.lab"))) 
+    attr(x, "var.lab") <- ""
+  if (is.null(attr(y, "var.lab"))) 
+    attr(y, "var.lab") <- ""
+  if (Totcol == F) 
+    tabla <- tabla[, -ncol(tabla), drop = F]
+  if (Totrow == F) 
+    tabla <- tabla[-(nrow(tabla):((nrow(tabla) - (length(cells) - 
+                                                    1)))), , drop = F]
+  if (!missing(selectrow)) 
+    tabla <- tabla[selectrow, , drop = F]
+  if (!missing(selectcol)) 
+    tabla <- tabla[, selectcol, drop = F]
+  if (is.null(attr(x, "var.lab"))) 
+    attr(x, "var.lab") <- ""
+  if (is.null(attr(y, "var.lab"))) 
+    attr(y, "var.lab") <- ""
+  tabla <- structure(tabla, class = c("tabla", "matrix", "cross"))
+  attr(tabla, "formato") <- cumsum(rep(length(cells), nrow(absolutos))[-1])
+  attr(tabla, "pct") <- pct
+  attr(tabla, "resumen") <- paste("Number of Missing Observations:", 
+                                  round(sum(w, na.rm = T), 0) - absolutos[nrow(absolutos), 
+                                                                          ncol(absolutos)])
+  attr(tabla, "title") <- paste(names(as.list(attr(x, "var.lab"))), 
+                                attr(x, "var.lab"), "by", names(as.list(attr(y, "var.lab"))), 
+                                attr(y, "var.lab"))
+  attr(tabla, "ancho") <- ancho
+  attr(tabla, "dec") <- dec
   
   return(tabla)
 }
+
 
 compnumeric<-function(x){
   if (is.null(x)) stop("La variable no existe")    
