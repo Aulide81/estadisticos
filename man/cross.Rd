@@ -8,7 +8,7 @@ CrossTable
 Funcion que implementa una tabulacion cruzada con un output similar al del SPSS
 }
 \usage{
-cross(x, y, w, cells = "count", dec = 1, orden, ancho = 12, Totrow = T, Totcol = T, selectrow, selectcol)
+cross(x, y, w, cells = "count", dec = 1, order, ancho = 12, Totrow = T, Totcol = T, selectrow, selectcol)
 }
 
 \arguments{
@@ -27,7 +27,7 @@ Vector string de estadisticos a mostrar, cells=c("count","row","col","tot")
   \item{dec}{
 Numero de decimales que se desean mostrar
 }
-  \item{orden}{
+  \item{order}{
 Valor string, orden="a" o orden="d", para ordenar segun columna del Total de moda ascendete o descendente respectivamente
 }
   \item{ancho}{
