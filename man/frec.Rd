@@ -1,5 +1,5 @@
-\name{frec}
-\alias{frec}
+\name{freq}
+\alias{freq}
 
 \title{
 Tabla de Frecuencias
@@ -8,7 +8,7 @@ Tabla de Frecuencias
 Funcion que implementa una tabla de frecuencias con un output similar al del SPSS
 }
 \usage{
-frec(x,w,orden,dec=1,selectcol)
+freq(x,w,order,dec=1,selectcol)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,8 +23,8 @@ Variable de ponderacion de los casos
   \item{dec}{
 Numero de decimales que se desean mostrar
 }
-  \item{orden}{
-Valor logico, orden="a" o orden="d", para ordenar segun columna del Total de moda ascendete o descendente respectivamente
+  \item{order}{
+Valor logico, order="a" o order="d", para ordenar segun columna del Total de moda ascendete o descendente respectivamente
 }
   \item{selectcol}{
 Valor o vector numerico que indica las filas a retener y por lo tanto que se mostraran
@@ -39,4 +39,4 @@ Devuelve una matrix de la clase tabla
 Emilio Arenas
 }
 
-\keyword{frec}
+\keyword{freq}
