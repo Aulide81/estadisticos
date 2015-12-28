@@ -28,7 +28,7 @@ Vector string de estadisticos a mostrar, cells=c("count","row","col","tot")
 Numero de decimales que se desean mostrar
 }
   \item{order}{
-Valor string, orden="a" o orden="d", para ordenar segun columna del Total de moda ascendete o descendente respectivamente
+Valor string, order="a" o order="d", para ordenar segun columna del Total de moda ascendete o descendente respectivamente
 }
   \item{ancho}{
 Valor numerico que indica el ancho de las columnas, por defecto ancho=12 
