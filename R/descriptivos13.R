@@ -139,7 +139,7 @@ print.tabla<-function (x){
     if (c("cmeans") %in% class(x)) 
       cat("\n Cell contents:", attr(x, "pct"), "\n", fill = T)
   }
-  if (any(c("means", "frec", "desc") %in% class(x))) {
+  if (any(c("means", "freq", "desc") %in% class(x))) {
     tablaprint <- x
     attributes(tablaprint) <- NULL
     dim(tablaprint) <- dim(x)
@@ -175,55 +175,52 @@ print.tabla<-function (x){
   }
 }
 
-frec<-function(x,w,orden,dec=1,selectcol){
-  
-  if (missing(w)) w<-rep(1,length(x))
-
-  if (is.null(x)) stop("La variable no existe")
-  
-  N<-sum(w,na.rm=T)
-  Frequency.val<-tapply(w,x,sum,na.rm=T)
-  n<-sum(Frequency.val)
+freq<-function(x,w,order,dec=1,selectcol){
+   if (missing(w)) w<-rep(1,length(x))
+  tabla<-suppressWarnings(rowsum(w,x,na.rm=T))
+  n<-N<-sum(tabla)
   
   if (is.numeric(x) & !is.null(attr(x, "val.lab"))) {
-    indices <- as.numeric(rownames(Frequency.val))
-    etiquetas<-indices%in%attr(x,"val.lab")
-    etiquetas<-sort(c(attr(x,"val.lab"),indices[etiquetas==F]))
-    etiquetas<-names(etiquetas[etiquetas%in%indices])
-    rownames(Frequency.val)<-paste(indices,etiquetas)   
-  }
-  
-  if(round(N)>round(n)) {
-    Frequency<-c(Frequency.val,"NA's"=N-n)
-    Percent<-prop.table(Frequency)*100
-    Valid.Pct<-c(prop.table(Frequency.val)*100,NA)
-    tabla<-cbind(Frequency,Percent,Valid.Pct)  
+    indices <- as.numeric(rownames(tabla))
+    etiquetas <- indices %in% attr(x, "val.lab")
+    etiquetas <- sort(c(attr(x, "val.lab"), indices[etiquetas==F]))
+    etiquetas <- names(etiquetas[etiquetas %in% indices])
     
+    if (is.na(indices[length(indices)])){
+      indices[length(indices)]<-""
+      etiquetas<-c(etiquetas,"missing")
+    }
+    rownames(tabla) <- paste(indices, etiquetas)
+  }
+  tabla<-cbind(tabla,prop.table(tabla)*100)
+  if(any(rownames(tabla)==" missing")) {
+    tabla<-cbind(tabla,c(prop.table(tabla[-nrow(tabla),1])*100,NA))
+    n<-sum(tabla[-nrow(tabla),1])
   }else{
-    Frequency<-Frequency.val
-    Percent<-prop.table(Frequency)*100
-    Valid.Pct<-Percent
-    tabla<-cbind(Frequency,Percent,Valid.Pct)
-  }
-
-    
-  if (!missing(orden)){
-    if(orden=="a") tabla<-tabla[order(tabla[,3]),]
-    if(orden=="d") tabla<-tabla[order(-tabla[,3]),]
+    tabla<-cbind(tabla,prop.table(tabla[,1])*100)
   }
   
-tabla<-cbind(tabla,Cum.Pct=cumsum(tabla[,3]))  
-tabla[,1]<-round(tabla[,1],0)  
-tabla[,2:4]<-round(tabla[,2:4],dec)  
-
-if(!missing(selectcol)) tabla<-tabla[,selectcol,drop=F]
-    
-if (is.null(attr(x,"var.lab"))) attr(x,"var.lab")<-""
-
-tabla<-structure(tabla,class=c("tabla","matrix","frec"))
-attr(tabla,"title")<-paste(names(as.list(attr(x,"var.lab"))),attr(x,"var.lab"))
-attr(tabla,"resumen")<-paste("Total Cases:",round(N,0),"Valid Cases:",round(n,0))
-return(tabla)
+  tabla<-cbind(tabla,cumsum(tabla[,3]))
+  colnames(tabla)<-c("Frequency","Percent","Valid Pct","Cum Pct")
+  tabla[,1]<-round(tabla[,1],0)
+  tabla[,2:4]<-round(tabla[,2:4],dec)
+  
+  if (!missing(order)) {
+    if (order == "a") 
+      tabla <- tabla[order(tabla[, 3]), ]
+    if (order == "d") 
+      tabla <- tabla[order(-tabla[, 3]), ]
+  }
+  
+  if (!missing(selectcol)) 
+    tabla <- tabla[, selectcol, drop = F]
+  if (is.null(attr(x, "var.lab"))) 
+    attr(x, "var.lab") <- ""
+  tabla <- structure(tabla, class = c("tabla", "matrix", "freq"))
+  attr(tabla, "title") <- paste(names(as.list(attr(x, "var.lab"))), 
+                                attr(x, "var.lab"))
+  attr(tabla, "resumen") <- paste("Total Cases:", round(N,0), "Valid Cases:", round(n, 0))
+  return(tabla)
 }
 
 desc<-function(x,w,ntiles=1,stat=c("Mean","Std.Dev","Minimum","Maximum","Valid.N"),dec=3){
@@ -1364,7 +1361,7 @@ ponderar<-function(variables,pesos,dif=1,iter=100,N){
   }
   
   if(!missing(N)) vp<-vp*(N/sum(vp,na.rm=T))
-  print(lapply(variables,frec,w=vp))
+  print(lapply(variables,freq,w=vp))
   return(vp)
 }
 
