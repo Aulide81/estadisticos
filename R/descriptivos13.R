@@ -192,6 +192,7 @@ freq<-function(x,w,order,dec=1,selectcol){
     }
     rownames(tabla) <- paste(indices, etiquetas)
   }
+  rownames(tabla)[is.na(rownames(tabla))]<-"missing"
   tabla<-cbind(tabla,prop.table(tabla)*100)
   if(any(rownames(tabla)==" missing")) {
     tabla<-cbind(tabla,c(prop.table(tabla[-nrow(tabla),1])*100,NA))
