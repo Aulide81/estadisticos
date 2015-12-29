@@ -516,7 +516,7 @@ if (is.null(x))
     rownames(absolutos) <- paste(indices, etiquetas)
   }
   
-  if (is.numeric(x) & !is.null(attr(y, "val.lab"))) {
+  if (is.numeric(y) & !is.null(attr(y, "val.lab"))) {
     indices <- as.numeric(colnames(absolutos))
     etiquetas <- indices %in% attr(y, "val.lab")
     etiquetas <- sort(c(attr(y, "val.lab"), indices[etiquetas==F]))
