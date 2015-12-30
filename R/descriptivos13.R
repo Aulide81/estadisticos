@@ -546,12 +546,13 @@ if(!missing(order)){
   
   
   
-  absolutos<-addmargins(absolutos,FUN=list(Total=sum),quiet=T)
-  colpct<-addmargins(colpct,FUN=list(Total=sum),quiet=T)
-  filapct<-addmargins(filapct,FUN=list(Total=sum),quiet=T)
-  totpct<-addmargins(totpct,FUN=list(Total=sum),quiet=T)
-  
-  absolutos <- round(absolutos, 0)
+absolutos <- addmargins(absolutos, FUN = list(Total = sum),quiet = T)
+colpct <- addmargins(colpct,1, FUN = list(Total = sum), quiet = T)
+filapct <- addmargins(filapct,2, FUN = list(Total = sum),quiet = T)
+totpct <- addmargins(totpct, FUN = list(Total = sum), quiet = T)
+colpct<-cbind(colpct,Total=totpct[,ncol(totpct)])
+filapct<-rbind(filapct,Total=totpct[nrow(totpct),])
+absolutos <- round(absolutos, 0)
 
   tabla <- NULL
   for (i in 1:nrow(absolutos)) {
