@@ -200,20 +200,20 @@ freq<-function(x,w,order,dec=1,selectcol){
   }else{
     tabla<-cbind(tabla,prop.table(tabla[,1])*100)
   }
-  
-  tabla<-cbind(tabla,cumsum(tabla[,3]))
-  colnames(tabla)<-c("Frequency","Percent","Valid Pct","Cum Pct")
-  tabla[,1]<-round(tabla[,1],0)
-  tabla[,2:4]<-round(tabla[,2:4],dec)
-  
-  if (!missing(order)) {
+
+ if (!missing(order)) {
     if (order == "a") 
       tabla <- tabla[order(tabla[, 3]), ]
     if (order == "d") 
       tabla <- tabla[order(-tabla[, 3]), ]
   }
   
-  if (!missing(selectcol)) 
+  tabla<-cbind(tabla,cumsum(tabla[,3]))
+  colnames(tabla)<-c("Frequency","Percent","Valid Pct","Cum Pct")
+  tabla[,1]<-round(tabla[,1],0)
+  tabla[,2:4]<-round(tabla[,2:4],dec)
+  
+   if (!missing(selectcol)) 
     tabla <- tabla[, selectcol, drop = F]
   if (is.null(attr(x, "var.lab"))) 
     attr(x, "var.lab") <- ""
