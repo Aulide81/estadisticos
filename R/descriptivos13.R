@@ -14,7 +14,7 @@ sink(codefile)
   for(i in 1:ncol(df)){
     if (!is.null(attr(df[,i],"var.lab"))) cat(paste("VAR LAB ",names(df[i]),"'",attr(df[,i],"var.lab"),"'.",sep=""),fill=T)
     if (!is.null(attr(df[,i],"val.lab"))){
-      labels<-paste(list.val(df[,i])[,1],"'",rownames(list.val(df[,i])),"'",sep="")
+      labels<-paste(list.val(df[,i])[,2],"'",list.val(df[,i])[,1],"'",sep="")
       cat(paste("VAL LAB",names(df)[i]),fill=T)
       cat(c(labels[-length(labels)],paste(labels[length(labels)],".",sep="")),fill=T)
     }
