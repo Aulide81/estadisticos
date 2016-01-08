@@ -1406,3 +1406,11 @@ si<-function(test,yes,no){
   test[is.na(test)]<-F
   ifelse(test,yes, no)
 }
+
+nvalid<-function(x){
+rowSums(!is.na(x))
+}
+
+nmis<-function(x){
+rowSums(is.na(x))
+}
