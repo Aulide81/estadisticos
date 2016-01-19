@@ -381,7 +381,7 @@ filtro<-function (df, ...) {
     return(y)
   }
   bd <- as.data.frame(mapply(copyattr, df[, indices,drop=F], bd[,indices,drop=F], 
-                               SIMPLIFY = F))
+                               SIMPLIFY = F),stringsAsFactors =F)
   if(any(dim(bd)==dimbd)==F) bd<-t(bd)
   rownames(bd) <- rownamesbd
   return(bd)
