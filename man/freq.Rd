@@ -1,6 +1,8 @@
 \name{freq}
 \alias{freq}
 \alias{freq.numeric}
+\alias{freq.character}
+\alias{freq.factor}
 \alias{freq.data.frame}
 
 \title{
