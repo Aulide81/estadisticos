@@ -15,7 +15,7 @@ freq(x,w,order,dec=1,selectcol)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-Variable de la que se desea saber sus porecentages
+Variable o data.frame
 }
 
   \item{w}{
