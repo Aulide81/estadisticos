@@ -15,7 +15,7 @@ desc(x, w, ntiles = 1, stat = c("Mean", "Std.Dev", "Minimum", "Maximum", "Valid.
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-Variable numerica
+Variable numerica o data.frame
 }
   \item{w}{
 Variable de ponderacion
