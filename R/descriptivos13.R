@@ -307,6 +307,25 @@ if ("Valid.N"%in%stat) tabla<-cbind(tabla,Valid.N=round(n,0))
   return(tabla)
 }
 
+
+descriptives<-function(x,...){
+  UseMethod("desc",x)
+}
+
+
+descriptives.numeric<-function(x,...) desc(x,...)
+descriptives.data.frame<-function(x,...){
+clase<-sapply(x,class)
+if(any(clase%in%c("character","factor"))){
+    eliminar<-which(clase%in%c("character","factor"))
+    cat("Not numerics variables:\n")
+    print(names(clase)[eliminar])
+    cat("\n")
+    lapply(x[,-eliminar],descriptives,...)
+}else{
+lapply(x,descriptives,...)
+}}
+
 means<-function(x,y,w,stat=c("Mean","Std.Dev","Valid.N"),Totrow=T,dec=2,selectrow){
   
   if (is.null(x)) stop("La variable x no existe")
