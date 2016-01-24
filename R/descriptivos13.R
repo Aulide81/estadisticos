@@ -311,7 +311,7 @@ desc<-function(x,...){
   UseMethod("descriptives",x)
 }
 
-desc.numeric<-function(x,...)estadisticos::descriptivos(x,...)
+desc.numeric<-function(x,...)estadisticos::descriptives(x,...)
 desc.data.frame<-function(x,...){
 clase<-sapply(x,class)
 if(any(clase%in%c("character","factor"))){
