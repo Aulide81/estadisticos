@@ -224,7 +224,7 @@ freq<-function(x,w,order,dec=1,selectcol){
   return(tabla)
 }
 
-desc<-function(x,w,ntiles=1,stat=c("Mean","Std.Dev","Minimum","Maximum","Valid.N"),dec=3){
+descriptives<-function(x,w,ntiles=1,stat=c("Mean","Std.Dev","Minimum","Maximum","Valid.N"),dec=3){
     
   if (is.null(x)) stop("La variable no existe")
   
@@ -308,10 +308,10 @@ if ("Valid.N"%in%stat) tabla<-cbind(tabla,Valid.N=round(n,0))
 }
 
 desc<-function(x,...){
-  UseMethod("desc",x)
+  UseMethod("descriptives",x)
 }
 
-desc.numeric<-function(x,...)desc(x,...)
+desc.numeric<-function(x,...) estadisticos::descriptives(x,...)
 desc.data.frame<-function(x,...){
 clase<-sapply(x,class)
 if(any(clase%in%c("character","factor"))){
