@@ -308,7 +308,7 @@ if ("Valid.N"%in%stat) tabla<-cbind(tabla,Valid.N=round(n,0))
 }
 
 desc<-function(x,...){
-  UseMethod("descriptives",x)
+  UseMethod("desc",x)
 }
 
 means<-function(x,y,w,stat=c("Mean","Std.Dev","Valid.N"),Totrow=T,dec=2,selectrow){
