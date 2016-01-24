@@ -1,5 +1,7 @@
 \name{desc}
-\alias{desc,desc.numeric,desc.data.frame}
+\alias{desc}
+\alias{desc.numeric}
+\alias{desc.data.frame}
 
 \title{
 Descriptivos
