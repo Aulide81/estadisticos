@@ -228,6 +228,8 @@ freq<-function(x,...){
   return(tabla)
 }
 
+freq.character<-function(x,...) .frequencies(x,...)
+freq.factor<-function(x,...) .frequencies(x,...)
 freq.numeric<-function(x,...) .frequencies(x,...)
 freq.data.frame<-function(x,...)lapply(x,.frequencies,...)
 
