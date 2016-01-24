@@ -1,5 +1,7 @@
 \name{freq}
 \alias{freq}
+\alias{freq.numeric}
+\alias{freq.data.frame}
 
 \title{
 Tabla de Frecuencias
