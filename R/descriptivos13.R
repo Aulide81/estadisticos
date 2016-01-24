@@ -175,7 +175,11 @@ print.tabla<-function (x){
   }
 }
 
-freq<-function(x,w,order,dec=1,selectcol){
+freq<-function(x,...){
+  UseMethod("freq",x)
+}
+
+.frequencies<-function(x,w,order,dec=1,selectcol){
    if (missing(w)) w<-rep(1,length(x))
   tabla<-suppressWarnings(rowsum(w,x,na.rm=T))
   n<-N<-sum(tabla)
@@ -223,6 +227,10 @@ freq<-function(x,w,order,dec=1,selectcol){
   attr(tabla, "resumen") <- paste("Total Cases:", round(N,0), "Valid Cases:", round(n, 0))
   return(tabla)
 }
+
+freq.numeric<-function(x,...) .frequencies(x,...)
+freq.data.frame<-function(x,...)lapply(x,.frequencies,...)
+
 
 desc<- function (x, ...) {
    UseMethod("desc", x)
