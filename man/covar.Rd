@@ -8,7 +8,7 @@ Matriz de covarianzas
 Esta funcion calcula la matriz de covarianzas
 }
 \usage{
-covariance(x,w)
+covar(x,w)
 }
 
 \arguments{
