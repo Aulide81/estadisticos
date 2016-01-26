@@ -970,93 +970,57 @@ k.means<-function (x, centers, w, iter = 10, initial, seed){
   invisible(resultados)
 }
 
-
-.covariance<-function(x,y,w){
-    
-  validos<-complete.cases(cbind(x,y))
-  x<-x[validos]
-  y<-y[validos]
-  w<-w[validos]
-  
-  mx<-weighted.mean(x,w=w,na.rm=T)
-  my<-weighted.mean(y,w=w,na.rm=T)
-  medias<-cbind(mx,my)
-  matriz<-cbind(x,y)
-  matriz<-sweep(matriz,2,medias,FUN="-")
-  matriz<-cbind(matriz,w)
-  return(sum(apply(matriz,1,prod,na.rm=T))/(sum(w)-1))
-}
-
-covariance<-function(x,y,w,dec=3){
-  
-  if (is.data.frame(x) | is.matrix(x)){
-  if (missing(w)) w<-rep(1,nrow(x))  
-  xv<-x[complete.cases(w),]
-  w<-w[complete.cases(w)]
-  
-  tabla<-apply(xv,2,function(i)apply(xv,2,.covariance,y=i,w=w))
-  
-  etiquetas<-NULL
-  for (i in 1:ncol(x)){
-  if (is.null(attr(x[,i],"var.lab"))) attr(x[,i],"var.lab")<-" "
-  etiquetas<-c(etiquetas,paste(attr(x[,i],"var.lab")))
-  }
-  rownames(tabla)<-paste(rownames(tabla),etiquetas)  
-  cat("Covarianzas\n")
-  return(round(tabla,dec))
-  }else{
-    if (missing(w)) w<-rep(1,length(x))  
-    x<-x[complete.cases(w)]
-    y<-y[complete.cases(w)]
-    w<-w[complete.cases(w)]
-    return(.covariance(x,y,w))
-  }
-}
-
-.correlation<-function(x,y,w){
-  covariance<-covariance(x,y,w)
-  
-  validos<-complete.cases(cbind(x,y))
-  x<-x[validos]
-  y<-y[validos]
-  w<-w[validos]
-  
-  mx<-weighted.mean(x,w=w,na.rm=T)
-  my<-weighted.mean(y,w=w,na.rm=T)
-  medias<-cbind(mx,my)
-  matriz<-cbind(x,y)
-  matriz<-sweep(matriz,2,medias,FUN="-")
-  matriz<-matriz^2
-  matriz<-sweep(matriz,1,w,FUN="*")    
-  std<-sqrt(apply(matriz,2,sum,na.rm=T)/(sum(w)-1))  
-  return(covariance/prod(std))
-}
-
-correlation<-function(x,y,w,dec=3){
-  
-  if (is.data.frame(x) | is.matrix(x)){
-    if (missing(w)) w<-rep(1,nrow(x))  
-    xv<-x[complete.cases(w),]
-    w<-w[complete.cases(w)]
-    
-    tabla<-apply(xv,2,function(i)apply(xv,2,.correlation,y=i,w=w))
-    etiquetas<-NULL
-    for (i in 1:ncol(x)){
-      if (is.null(attr(x[,i],"var.lab"))) attr(x[,i],"var.lab")<-" "
-      etiquetas<-c(etiquetas,paste(attr(x[,i],"var.lab")))
+covar<-function(x,w){
+  if(ncol(x)<2) stop("Need array or data.frame with 2 or more columns")
+  if (missing(w))  w<-rep(1,nrow(x))
+  covarianza<-NULL
+  colum<-ncol(x)
+  for(i in 1:colum){
+    for(j in 1:colum){
+      colums<-c(i,j)
+      v<-complete.cases(x[,colums])
+      medias<-apply(x[v,colums],2,weighted.mean,w=w[v],na.rm=T)
+      matriz<-sum((x[v,colums][,1]-medias[1])*(x[v,colums][,2]-medias[2]))
+      matriz<-matriz/(sum(w[v])-1)
+      covarianza<-c(covarianza,matriz)
     }
-  
-  rownames(tabla)<-paste(rownames(tabla),etiquetas)
-  cat("Correlaciones\n")
-  return(tabla)
-  }else{
-    if (missing(w)) w<-rep(1,length(x))  
-    x<-x[complete.cases(w)]
-    y<-y[complete.cases(w)]
-    w<-w[complete.cases(w)]    
-    return(.correlation(x,y,w))
   }
+  covarianza<-matrix(covarianza,byrow = T,nrow=colum)
+  rownames(covarianza)<-colnames(covarianza)<-colnames(x)
+  
+  if(is.data.frame(x)){
+  rownames(covarianza)<-paste(rownames(covarianza),sapply(x,function(k)attr(k,"var.lab")))
+  rownames(covarianza)<-sub("NULL","",rownames(covarianza))
+  rownames(covarianza)<-sub("[[:blank:]]+$","",rownames(covarianza))
+  }
+  return(covarianza)
 }
+
+correl<-function(x,w){
+  if (missing(w))  w<-rep(1,nrow(x))
+  correlaciones<-NULL
+  colum<-ncol(x)
+  for(i in 1:colum){
+    for(j in 1:colum){
+      colums<-c(i,j)
+      v<-complete.cases(x[,colums])
+      medias<-apply(x[v,colums],2,weighted.mean,w=w[v],na.rm=T)
+      matriz<-sum((x[v,colums][,1]-medias[1])*(x[v,colums][,2]-medias[2]))
+      matriz<-matriz/(sum(w[v])-1)
+      matriz<-matriz/prod(apply(x[v,colums],2,desc,w=w[v],stat="Std.Dev",dec=Inf))
+      correlaciones<-c(correlaciones,matriz)
+    }
+  }
+  correlaciones<-matrix(correlaciones,byrow = T,nrow=colum)
+  rownames(correlaciones)<-colnames(correlaciones)<-colnames(x)
+  if(is.data.frame(x)){
+    rownames(correlaciones)<-paste(rownames(correlaciones),sapply(x,function(k)attr(k,"var.lab")))
+    rownames(correlaciones)<-sub("NULL","",rownames(correlaciones))
+    rownames(correlaciones)<-sub("[[:blank:]]+$","",rownames(correlaciones))
+  }
+  return(correlaciones)
+}
+
 
 .sct<-function(x,w){
   sct<-(x-weighted.mean(x,w=w,na.rm=T))^2
