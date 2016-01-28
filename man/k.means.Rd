@@ -8,7 +8,7 @@ K-Means
 K -means es un metodo de agrupamiento, que tiene como objetivo la particion de un conjunto n observaciones en k grupos en el que cada observacion pertenece al grupo mas cercano a la media.
 }
 \usage{
-k.means(x, centers, w, iter = 10, initial, seed)
+k.means(x, centers, w, iter = 10, initial)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,14 +27,10 @@ Numero de iteraciones. Por defecto 10
   \item{initial}{
 Matrix numerica con los centros iniciales. Por omision, el algoritmo elegira uno al azar
 }
-  \item{seed}{
-Valor numerico para fijar la semilla de probabilidad
-}
 }
 
 \value{
-\item{Grupos}{Vector numeric que contiene la clasificacion para cada observacion}
-\item{Anova}{Tabla de analisis de Varianza}
+Objeto de la clase list, con los Centros_Iniciales, Grupos, Centros_Finales e Iterations
 }
 
 \author{
