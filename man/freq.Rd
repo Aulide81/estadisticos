@@ -1,5 +1,6 @@
 \name{freq}
 \alias{freq}
+\alias{freq.logical}
 \alias{freq.numeric}
 \alias{freq.character}
 \alias{freq.factor}
