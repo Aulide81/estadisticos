@@ -927,10 +927,7 @@ k.means<-function (x, centers, w, iter = 10, initial){
     }
   }
   grupofinal[noval]<-NA
-  
-  if (any(is.na(w))) {
-    grupofinal[is.na(w)]<-NA
-  }
+  grupofinal[is.na(w)]<-NA
   
   centroides <- apply(x, 2, means, y = grupofinal, w = w,
                       Totrow = F, stat = "Mean",dec=Inf)
