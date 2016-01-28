@@ -1,5 +1,6 @@
 \name{desc}
 \alias{desc}
+\alias{desc.logical}
 \alias{desc.numeric}
 \alias{desc.data.frame}
 
