@@ -325,6 +325,11 @@ if ("Valid.N"%in%stat) tabla<-cbind(tabla,Valid.N=round(n,0))
 
 desc.logical<-function(x,...) .descriptives(x,...)
 desc.numeric<-function(x,...) .descriptives(x,...)
+desc.matrix<-function(x,stat=c("Mean", "Std.Dev", "Minimum", "Maximum", "Valid.N"),...){
+  tabla<-t(apply(x,2,.descriptives,stat=stat,...))
+  rownames(tabla)<-stat
+  tabla
+  }
 desc.data.frame<-function(x,...){
 clase<-sapply(x,class)
 if(any(clase%in%c("character","factor"))){
