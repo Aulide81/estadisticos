@@ -2,6 +2,7 @@
 \alias{desc}
 \alias{desc.logical}
 \alias{desc.numeric}
+\alias{desc.matrix}
 \alias{desc.data.frame}
 
 \title{
