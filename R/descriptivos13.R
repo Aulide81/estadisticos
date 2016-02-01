@@ -893,9 +893,8 @@ k.means<-function (x, centers, w, iter = 10, initial){
     w <- rep(1, nrow(x))
 
   if (missing(initial)) {
-    xc <- x[complete.cases(x),, drop = F]
-    centroides <- xc[sample(1:nrow(xc), centers),,drop=F ]
-    centroides <- as.matrix(centroides)
+    centroides <-sample(which(complete.cases(x)),centers)
+    centroides <-as.matrix(x[centroides,,drop=F])
   }
   else {
     if (!is.matrix(initial))
