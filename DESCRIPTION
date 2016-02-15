@@ -10,4 +10,5 @@ License: GPL
 URL: https://github.com/Aulide81/estadisticos
 Suggests: knitr
 VignetteBuilder: knitr
+ByteCompile: TRUE
 
