@@ -28,4 +28,4 @@ Por defecto FALSE, si v es de longitud 2 y thr=TRUE, entonces devolvera el numer
 Emilio Arenas
 }
 
-\keyword{count}
+\keyword{contar}
