@@ -444,9 +444,7 @@ thr<- function(x,inicial,final){
   inicial<=x & x<=final & !is.na(x)
 }
 
-"%thr%"<- function(x,y){
-  thr(x,y[1],y[2])
-}
+"%thr%"<- function(x,y) thr(x,y[1],y[2])
 
 contar<-function (bbdd, v,thr=F) {
 
