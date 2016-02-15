@@ -441,7 +441,7 @@ list.var<-function(str,df){
 }
 
 thr<- function(x,inicial,final){
-  inicial<=x & x<=final & !is.na(x)
+  (inicial<=x & x<=final) & !is.na(x)
 }
 
 "%thr%"<- function(x,y) thr(x,y[1],y[2])
