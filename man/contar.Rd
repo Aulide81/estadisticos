@@ -1,5 +1,5 @@
-\name{count}
-\alias{count}
+\name{contar}
+\alias{contar}
 
 \title{
 Conteo
@@ -9,15 +9,18 @@ Conteo
 Funcion que devuelve para cada observacion el numero de ocurrencias que coincide con un valor logico
 }
 \usage{
-count(..., v)
+count(bbff, v,thr=F)
 }
 
 \arguments{
-  \item{...}{
-Variables
+  \item{bbdd}{
+Data.frame
 }
   \item{v}{
 Valor o vector de valores que se desea contar
+}
+\item{thr}{
+Por defecto FALSE, si v es de longitud 2 y thr=TRUE, entonces devolvera el numero de ocurrencias dentro del rango v
 }
 }
 
