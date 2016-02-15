@@ -1,6 +1,6 @@
-\name{thr}
-\alias{thr}
-\alias{\%thr\%}
+\name{thru}
+\alias{thru}
+\alias{\%thru\%}
 
 \title{
 Funcion auxiliar logica para valores dentro de un rango
@@ -10,8 +10,8 @@ Funcion auxiliar logica para valores dentro de un rango
 Funcion similiar a la de between del paquete data.table, que permite verificar de manera logica si un valor pertenece a un rango de valores
 }
 \usage{
-thr(x,inicial,final)
-x \%thr\% y
+thru(x,inicial,final)
+x \%thru\% y
 }
 
 \arguments{
@@ -33,4 +33,4 @@ Vector de longitud 2, que indique el limite inferior y el limite superior del ra
 Emilio Arenas
 }
 
-\keyword{thr}
+\keyword{thru}
