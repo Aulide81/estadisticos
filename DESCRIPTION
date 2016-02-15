@@ -5,6 +5,7 @@ Version: 1.9.1
 Date: 2015-09-10
 Author: Emilio Arenas <emiliojat@gmail.com>
 Maintainer: Emilio Arenas <emiliojat@gmail.com>
+Imports: methods, chron
 Description: Este paquete proporciona diferentes utilidades para el analisis univariado,bivariado y multivariado, entre otras funciones
 License: GPL
 URL: https://github.com/Aulide81/estadisticos
