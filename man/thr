@@ -11,6 +11,7 @@ Funcion similiar a la de between del paquete data.table, que permite verificar d
 }
 \usage{
 thr(x,inicial,final)
+x \%thr\% y
 }
 
 \arguments{
