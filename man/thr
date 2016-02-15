@@ -1,6 +1,7 @@
 
 \name{thr}
 \alias{thr}
+\alias{\%thr\%}
 
 \title{
 Funcion auxiliar logica para valores dentro de un rango
