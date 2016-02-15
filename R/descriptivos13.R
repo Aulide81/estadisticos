@@ -452,7 +452,7 @@ valor <- rep(0,nrow(bbdd))
   
 if (length(v)==2 & thr==T)  {
     for (i in 1:ncol(bbdd)) {
-      valor[bbdd[, i] %thr% v ] <- valor[bbdd[,i] %thr% v] + 1
+      valor[bbdd[, i] %thru% v ] <- valor[bbdd[,i] %thru% v] + 1
     }
     return(valor)
   }else{
