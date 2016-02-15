@@ -440,13 +440,29 @@ list.var<-function(str,df){
   print(tabla,quote=F)  
 }
 
-count<-function(...,v){
-  bbdd<-data.frame(...)
-  bbdd$valor<-0
-  for (i in 1:(ncol(bbdd)-1)){
-    bbdd[bbdd[,i]%in%v & !is.na(bbdd[,i]),"valor"]<-bbdd[bbdd[,i]%in%v & !is.na(bbdd[,i]),"valor"]+1
+thr<- function(x,inicial,final){
+  inicial<=x & x<=final & !is.na(x)
+}
+
+`%thr%`<- function(x,y){
+  thr(x,y[1],y[2])
+}
+
+contar<-function (bbdd, v,thr=F) {
+
+valor <- rep(0,nrow(bbdd))
+  
+if (length(v)==2 & thr==T)  {
+    for (i in 1:ncol(bbdd)) {
+      valor[bbdd[, i] %thr% v ] <- valor[bbdd[,i] %thr% v] + 1
+    }
+    return(valor)
+  }else{
+    for (i in 1:ncol(bbdd)) {
+      valor[bbdd[, i] %in% v & !is.na(bbdd[, i])] <- valor[bbdd[,i] %in% v & !is.na(bbdd[, i])] + 1
+    }
+    return(valor)
   }
-  return(bbdd$valor)
 }
 
 recode<-function(x,...){
