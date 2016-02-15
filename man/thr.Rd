@@ -24,6 +24,9 @@ Limite inferior del rango
   \item{final}{
 Limite superior del rango
 }
+ \item{y}{
+Vector de longitud 2, que indique el limite inferior y el limite superior del rango
+}
 }
 
 \author{
