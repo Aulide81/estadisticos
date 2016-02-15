@@ -440,11 +440,11 @@ list.var<-function(str,df){
   print(tabla,quote=F)  
 }
 
-thr<- function(x,inicial,final){
+thru<- function(x,inicial,final){
   (inicial<=x & x<=final) & !is.na(x)
 }
 
-"%thr%"<- function(x,y) thr(x,y[1],y[2])
+"%thru%"<- function(x,y) thru(x,y[1],y[2])
 
 contar<-function (bbdd, v,thr=F) {
 
