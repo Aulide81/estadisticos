@@ -20,7 +20,7 @@ Vector numerico
   \item{inicial}{
 Limite inferior del rango
 }
-\item{final}{
+  \item{final}{
 Limite superior del rango
 }
 }
