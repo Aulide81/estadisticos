@@ -9,7 +9,7 @@ Conteo
 Funcion que devuelve para cada observacion el numero de ocurrencias que coincide con un valor logico
 }
 \usage{
-count(bbff, v, thr=F)
+contar(bbff, v, thr=F)
 }
 
 \arguments{
