@@ -440,11 +440,11 @@ list.var<-function(str,df){
   print(tabla,quote=F)  
 }
 
-contar<-function (bbdd, v,thr=F) {
+contar<-function (bbdd, v,thru=F) {
 
 valor <- rep(0,nrow(bbdd))
   
-if (length(v)==2 & thr==T)  {
+if (length(v)==2 & thru==T)  {
     for (i in 1:ncol(bbdd)) {
       valor[bbdd[, i] %thru% v ] <- valor[bbdd[,i] %thru% v] + 1
     }
