@@ -326,9 +326,14 @@ if ("Valid.N"%in%stat) tabla<-cbind(tabla,Valid.N=round(n,0))
 desc.logical<-function(x,...) .descriptives(x,...)
 desc.numeric<-function(x,...) .descriptives(x,...)
 desc.matrix<-function(x,stat=c("Mean","Std.Dev","Minimum","Maximum","Valid.N"),...){
-  tabla<-apply(x,2,.descriptives,stat=stat,...)
-  rownames(tabla)<-stat
-  t(tabla)
+ tabla <- apply(x, 2, .descriptives, stat = stat,...)
+  if(length(stat)>1){
+  tabla<-t(tabla)
+  }else{
+  tabla<-t(t(tabla))
+  }
+  colnames(tabla) <- stat
+  tabla
   }
 desc.data.frame<-function(x,...){
 clase<-sapply(x,class)
