@@ -1,9 +1,7 @@
 library(ReporteRs)
 options('ReporteRs-default-font'='Arial')
 #options('ReporteRs-fontsize'=14, 'ReporteRs-default-font'='Arial')
-#doc = declareTitlesStyles(doc,stylenames = c("Titre1", "Titre2", "Titre3"
-#                                             , "Titre4", "Titre5", "Titre6"
-#                                             , "Titre7", "Titre8", "Titre9","Normal" ) )
+#doc = declareTitlesStyles(doc,stylenames = c("Titre1", "Titre2", "Titre3" , "Titre4", "Titre5", "Titre6", "Titre7", "Titre8", "Titre9","Normal" ) )
 
 echo<-function(txt){
   print(txt)
