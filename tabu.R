@@ -27,7 +27,7 @@ if(!c("cmeans")%in%class(tabla)){
   cells<-attr(tabla,"pct")
   cells<-unlist(strsplit(cells, ", ", fixed = TRUE))
   
-  if ("Count"%in%cells) {
+  if ("count"%in%cells) {
     tablaprint[-c(seq(1, length(tablaprint), length(cells))),]<-paste0(tablaprint[-c(seq(1, length(tablaprint), length(cells))),],"%")
     tablaprint[tablaprint=="%"]<-""
   }else{
