@@ -1003,13 +1003,14 @@ correl<-function(x,w){
   colum<-ncol(x)
   for(i in 1:colum){
     for(j in 1:colum){
-      colums<-c(i,j)
-      v<-complete.cases(x[,colums])
-      medias<-apply(x[v,colums],2,weighted.mean,w=w[v],na.rm=T)
-      matriz<-sum((x[v,colums][,1]-medias[1])*(x[v,colums][,2]-medias[2]))
-      matriz<-matriz/(sum(w[v])-1)
-      matriz<-matriz/prod(apply(x[v,colums],2,desc,w=w[v],stat="Std.Dev",dec=Inf))
-      correlaciones<-c(correlaciones,matriz)
+    colums <- c(i, j)
+    v <- complete.cases(x[, colums])
+    medias <- apply(x[v, colums], 2, weighted.mean, w = w[v],na.rm = T)
+    a<-x[v, colums][,1] - medias[1]
+    b<-x[v, colums][,2] - medias[2]
+    numerador<-sum(a*b)
+    denominador<-sqrt(sum(a^2))*sqrt(sum(b^2))
+    correlaciones <- c(correlaciones,numerador/denominador)
     }
   }
   correlaciones<-matrix(correlaciones,byrow = T,nrow=colum)
