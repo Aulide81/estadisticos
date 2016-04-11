@@ -1008,8 +1008,8 @@ correl<-function(x,w){
     medias <- apply(x[v, colums], 2, weighted.mean, w = w[v],na.rm = T)
     a<-x[v, colums][,1] - medias[1]
     b<-x[v, colums][,2] - medias[2]
-    numerador<-sum(a*b)
-    denominador<-sqrt(sum(a^2))*sqrt(sum(b^2))
+    numerador<-sum(a* b*w[v])
+    denominador<-sqrt(sum((a^2)*w[v])) * sqrt(sum((b^2)*w[v]))
     correlaciones <- c(correlaciones,numerador/denominador)
     }
   }
