@@ -972,27 +972,33 @@ k.means<-function (x, centers, w, iter = 10, initial){
 }
 
 covar<-function(x,w){
-  if(ncol(x)<2) stop("Need array or data.frame with 2 or more columns")
-  if (missing(w))  w<-rep(1,nrow(x))
-  covarianza<-NULL
-  colum<-ncol(x)
-  for(i in 1:colum){
-    for(j in 1:colum){
-      colums<-c(i,j)
-      v<-complete.cases(x[,colums])
-      medias<-apply(x[v,colums],2,weighted.mean,w=w[v],na.rm=T)
-      matriz<-sum((x[v,colums][,1]-medias[1])*(x[v,colums][,2]-medias[2]))
-      matriz<-matriz/(sum(w[v])-1)
-      covarianza<-c(covarianza,matriz)
+if (ncol(x) < 2) 
+    stop("Need array or data.frame with 2 or more columns")
+  if (missing(w)) 
+    w <- rep(1, nrow(x))
+  covarianza <- NULL
+  colum <- ncol(x)
+  for (i in 1:colum) {
+    for (j in 1:colum) {
+      colums <- c(i, j)
+      v <- complete.cases(x[, colums])
+      medias <- apply(x[v, colums], 2, weighted.mean, 
+        w = w[v], na.rm = T)
+      
+      a<-x[v,colums][,1]-medias[1]
+      b<-x[v,colums][,2]-medias[2]
+      numerador<-sum(a*b*w[v])
+      denominador <-(sum(w[v]) - 1)
+      covarianza <- c(covarianza, numerador/denominador)
     }
   }
-  covarianza<-matrix(covarianza,byrow = T,nrow=colum)
-  rownames(covarianza)<-colnames(covarianza)<-colnames(x)
-  
-  if(is.data.frame(x)){
-  rownames(covarianza)<-paste(rownames(covarianza),sapply(x,function(k)attr(k,"var.lab")))
-  rownames(covarianza)<-sub("NULL","",rownames(covarianza))
-  rownames(covarianza)<-sub("[[:blank:]]+$","",rownames(covarianza))
+  covarianza <- matrix(covarianza, byrow = T, nrow = colum)
+  rownames(covarianza) <- colnames(covarianza) <- colnames(x)
+  if (is.data.frame(x)) {
+    rownames(covarianza) <- paste(rownames(covarianza), 
+      sapply(x, function(k) attr(k, "var.lab")))
+    rownames(covarianza) <- sub("NULL", "", rownames(covarianza))
+    rownames(covarianza) <- sub("[[:blank:]]+$", "", rownames(covarianza))
   }
   return(covarianza)
 }
