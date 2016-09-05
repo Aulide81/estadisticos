@@ -1330,13 +1330,13 @@ summary.comul<-function(x,...){
   summary.CA(structure(x,class=c("CA","list","comul")),...)
 }
 
-ponderar<-function(variables,pesos,dif=1,iter=100,N){
+ponderar<-function(variables,pesos,vp,dif=1,iter=100,N){
   
   if (!is.list(variables)) stop("Las variables han de ser introducidas como una lista")
   if (!is.list(pesos)) stop("Los pesos han de ser introducidos como una lista")
   if (length(variables)!=length(pesos)) stop("El numero de variables es diferente al de pesos")
   
-  vp<-rep(1,length(variables[[1]]))
+  if(missing(vp)) vp<-rep(1,length(variables[[1]]))
   contador<-0
   posicion<-1:length(variables)
   
@@ -1361,8 +1361,8 @@ ponderar<-function(variables,pesos,dif=1,iter=100,N){
     posicion<-which(condicion==F)
     if (contador==iter) break
   }
-  
   if(!missing(N)) vp<-vp*(N/sum(vp,na.rm=T))
+  cat("Total iteraciones alcanzadas: ",contador,"\n\n")
   print(lapply(variables,freq,w=vp))
   return(vp)
 }
