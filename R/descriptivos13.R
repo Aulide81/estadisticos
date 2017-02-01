@@ -884,14 +884,27 @@ attr(tabla,"dec")<-dec
 return(tabla)
 }
 
-spssdef<-function(df){
-for (i in names(df)){
-attr(df[,i],"var.lab")<-attributes(df)$variable.labels[i]  
-attr(df[,i],"val.lab")<-sort(attr(df[,i],"value.labels"))
-attr(df[,i],"value.labels")<-NULL
-}
-attr(df,"variable.labels")<-NULL
-return(df)
+spssdef<-function (df) { 
+  if ("tbl_df"%in%class(df)){
+    for (i in names(df)) {
+      a<- attr(df[, i], "label")
+      b<- sort(attr(df[, i], "labels"))
+      df[,i]<-as.vector(df[,i])
+      
+      attr(df[, i], "var.lab") <- a
+      if(is.null(a)) attr(df[, i], "var.lab") <- ""  
+      names(attr(df[,i],"var.lab")) <- toupper(i)
+      attr(df[,i], "val.lab") <- b
+    }
+  }else{
+  for (i in names(df)) {
+    attr(df[, i], "var.lab") <- attributes(df)$variable.labels[i]
+    attr(df[, i], "val.lab") <- sort(attr(df[, i], "value.labels"))
+    attr(df[, i], "value.labels") <- NULL
+  }
+    }
+  attr(df, "variable.labels") <- NULL
+  return(df)
 }
 
 
