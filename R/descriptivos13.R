@@ -664,67 +664,65 @@ compnumeric<-function(x){
   return(variable)
 }
 
-cmeans<-function(x,y,w,dec=2,stat="Mean",title="",ancho=12,Totcol=T,selectrow,selectcol){
-  
-  if (!is.list(x)) stop("Las variables han de ser introducidas como lista")
-  if (missing(w)) w<-rep(1,length(x[[1]]))
-  
-  stat<-c("Mean","Variance","Std.Dev","S.E.Mean","Skewness","Kurtosis","Minimum","Maximum","Range","Sum","Valid.N")[c("Mean","Variance","Std.Dev","S.E.Mean","Skewness","Kurtosis","Minimum","Maximum","Range","Sum","Valid.N")%in%unique(stat)]
-  
+cmeans<-function (x, y, w, dec = 2, stat = "Mean", title = "", ancho = 12, 
+  Totcol = T, selectrow, selectcol) 
+{
+  if (missing(w)) 
+    w <- rep(1, length(x[[1]]))
+  stat <- c("Mean", "Variance", "Std.Dev", "S.E.Mean", "Skewness", 
+    "Kurtosis", "Minimum", "Maximum", "Range", "Sum", "Valid.N")[c("Mean", 
+    "Variance", "Std.Dev", "S.E.Mean", "Skewness", "Kurtosis", 
+    "Minimum", "Maximum", "Range", "Sum", "Valid.N") %in% 
+    unique(stat)]
   if (missing(y)) {
-    y<-rep("siny",length(x[[1]]))
+    y <- rep("siny", length(x[[1]]))
   }
-  
-  if (is.null(y)) stop("La variable y no existe")  
-  
-  tabla<-NULL
-  etiquetas<-NULL
-  for (i in x){
-    if (is.null(attr(i,"var.lab"))) attr(i,"var.lab")<-""
-    etiquetas<-c(etiquetas,rep(paste(names(attr(i,"var.lab")),unname(attr(i,"var.lab"))),length(stat)))
-    tabla<-cbind(tabla,means(i,y,w,dec=dec,stat=stat))
+  if (is.null(y)) 
+    stop("La variable y no existe")
+  tabla <- NULL
+  etiquetas <- NULL
+  for (i in 1:ncol(x)) {
+    if (is.null(attr(x[,i], "var.lab"))) 
+      attr(x[,i], "var.lab") <- ""
+    etiquetas <- c(etiquetas, rep(paste(names(attr(x[,i], "var.lab")), 
+    unname(attr(x[,i], "var.lab"))), length(stat)))
+    tabla <- cbind(tabla, means(x[,i], y, w, dec = dec, stat = stat))
   }
-  
-  tabla<-t(tabla)
-  etiquetas[-c(seq(1,length(etiquetas),length(stat)))]<-""
-  tabla<-cbind(" "=etiquetas,"Stat"=rownames(tabla),tabla)
-    
-  rownames(tabla)<-NULL
-    
-  
-  if (length(unique(y)==1) & all(unique(y)=="siny")){
-    tabla<-tabla[,-3,drop=F]
-    }
-  
-  pct<-stat
-  pct<-paste(pct,collapse=", ")
-  
-      
-  rownames(tabla)<-tabla[,1]
-  tabla<-tabla[,-c(1,2),drop=F]
-  tabla<-apply(tabla,2,function(x)as.numeric(x))
-    
-  if (class(tabla)!="matrix") {
-    etiquetasy<-names(tabla)
-    dim(tabla)<-c(1,length(tabla))
-    colnames(tabla)<-etiquetasy
+  tabla <- t(tabla)
+  etiquetas[-c(seq(1, length(etiquetas), length(stat)))] <- ""
+  tabla <- cbind(` ` = etiquetas, Stat = rownames(tabla), 
+    tabla)
+  rownames(tabla) <- NULL
+  if (length(unique(y) == 1) & all(unique(y) == "siny")) {
+    tabla <- tabla[, -3, drop = F]
   }
-  rownames(tabla)<-etiquetas      
-    
-  if (Totcol==F) tabla<-tabla[,-ncol(tabla),drop=F]
-  
-  if (!missing(selectrow)) tabla<-tabla[selectrow,,drop=F]
-  if (!missing(selectcol)) tabla<-tabla[,selectcol,drop=F]
-  
-  if (is.null(attr(y,"var.lab"))) attr(y,"var.lab")<-""
-  
-  tabla<-structure(tabla,class=c("tabla","matrix","cmeans"))
-  attr(tabla,"formato")<-cumsum(rep(length(stat),nrow(tabla)/length(stat))[-1])
-  attr(tabla,"pct")<-pct
-  attr(tabla,"title")<-paste(title,"by",names(as.list(attr(y,"var.lab"))),attr(y,"var.lab"))
-  attr(tabla,"ancho")<-ancho
-  attr(tabla,"dec")<-dec
-  return(tabla)  
+  pct <- stat
+  pct <- paste(pct, collapse = ", ")
+  rownames(tabla) <- tabla[, 1]
+  tabla <- tabla[, -c(1, 2), drop = F]
+  tabla <- apply(tabla, 2, function(x) as.numeric(x))
+  if (class(tabla) != "matrix") {
+    etiquetasy <- names(tabla)
+    dim(tabla) <- c(1, length(tabla))
+    colnames(tabla) <- etiquetasy
+  }
+  rownames(tabla) <- etiquetas
+  if (Totcol == F) 
+    tabla <- tabla[, -ncol(tabla), drop = F]
+  if (!missing(selectrow)) 
+    tabla <- tabla[selectrow, , drop = F]
+  if (!missing(selectcol)) 
+    tabla <- tabla[, selectcol, drop = F]
+  if (is.null(attr(y, "var.lab"))) 
+    attr(y, "var.lab") <- ""
+  tabla <- structure(tabla, class = c("tabla", "matrix", "cmeans"))
+  attr(tabla, "formato") <- cumsum(rep(length(stat), nrow(tabla)/length(stat))[-1])
+  attr(tabla, "pct") <- pct
+  attr(tabla, "title") <- paste(title, "by", names(as.list(attr(y, 
+    "var.lab"))), attr(y, "var.lab"))
+  attr(tabla, "ancho") <- ancho
+  attr(tabla, "dec") <- dec
+  return(tabla)
 }
 
 multiresp<-function(x,y,w,orden,resp=F,dec=1,cells="count",title="",ancho=12,Totrow=T,Totcol=T,selectrow,selectcol){
