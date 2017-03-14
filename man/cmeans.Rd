@@ -13,7 +13,7 @@ cmeans(x, y, w, dec = 2, stat = "Mean", title = "", ancho = 12, Totcol = T, sele
 
 \arguments{
   \item{x}{
-lista de variables cuantitativas que se desea analizar
+Data.frame variables cuantitativas que se desea analizar
 }
   \item{y}{
 Variables de cabecera por la que se desea obtener los estadisticos de la lista de variables x
