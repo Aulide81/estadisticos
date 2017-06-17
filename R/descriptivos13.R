@@ -1375,6 +1375,9 @@ ponderar<-function (variables, pesos, vp, dif = 1, iter = 100, N) {
         if (contador == iter) 
             break
     }
+if (!missing(N)) vp <- vp*(N/sum(vp,na.rm=T))
+    return(vp)
+}                        
                         
 varlab<-gtools::defmacro(df,var,val,
                          expr={
