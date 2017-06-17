@@ -1341,43 +1341,41 @@ summary.comul<-function(x,...){
   summary.CA(structure(x,class=c("CA","list","comul")),...)
 }
 
-ponderar<-function(variables,pesos,vp,dif=1,iter=100,N){
-  
-  if (!is.list(variables)) stop("Las variables han de ser introducidas como una lista")
-  if (!is.list(pesos)) stop("Los pesos han de ser introducidos como una lista")
-  if (length(variables)!=length(pesos)) stop("El numero de variables es diferente al de pesos")
-  
-  if(missing(vp)) vp<-rep(1,length(variables[[1]]))
-  contador<-0
-  posicion<-1:length(variables)
-  
-  while(length(posicion)!=0){
-    contador<-contador+1
-    for (v in posicion){
-      vari<-variables[[v]]
-      muestra<-tapply(vp,vari,sum,na.rm=T)
-      pes<-pesos[[v]]
-      valores<-sort(unique(vari))
-      for (i in valores){
-        vp[vari==i]<-vp[vari==i]*(pes[i]/muestra[i])
-      }
-    }
-    final<-lapply(variables,function(k)round(tapply(vp,k,sum,na.rm=T),1))
-      
-    condicion<-NULL
-    for (i in 1:length(variables)){
-      condicion<-c(condicion,all(abs(final[[i]]-pesos[[i]])<=dif))
-    }
+ponderar<-function (variables, pesos, vp, dif = 1, iter = 100, N) {
+    if (!is.list(variables)) 
+        stop("Las variables han de ser introducidas como una lista")
+    if (!is.list(pesos)) 
+        stop("Los pesos han de ser introducidos como una lista")
+    if (length(variables) != length(pesos)) 
+        stop("El numero de variables es diferente al de pesos")
+    if (missing(vp)) 
+        vp <- rep(1, length(variables[[1]]))
     
-    posicion<-which(condicion==F)
-    if (contador==iter) break
-  }
-  if(!missing(N)) vp<-vp*(N/sum(vp,na.rm=T))
-  cat("Total iteraciones alcanzadas: ",contador,"\n\n")
-  print(lapply(variables,freq,w=vp))
-  return(vp)
-}
-
+    contador <- 0
+    posicion <- 1:length(variables)
+    while (length(posicion) != 0) {
+        contador <- contador + 1
+        for (v in posicion) {
+            vari <- variables[[v]]
+            muestra <- tapply(vp, vari, sum, na.rm = T)
+            muestra<-round(prop.table(muestra)*100,1)
+            pes <- pesos[[v]]
+            valores <- sort(unique(vari))
+            for (i in 1:length(valores)) {
+                vp[vari == valores[i]] <- vp[vari == valores[i]] * (pes[i]/muestra[i])
+            }
+        }
+        final <- lapply(variables, function(k) round(
+          prop.table(tapply(vp,k, sum, na.rm = T))*100, 1))
+        condicion <- NULL
+        for (i in 1:length(variables)) {
+          condicion <- c(condicion, all(abs(final[[i]] - pesos[[i]]) <= dif))
+        }
+        posicion <- which(condicion == F)
+        if (contador == iter) 
+            break
+    }
+                        
 varlab<-gtools::defmacro(df,var,val,
                          expr={
                            if(!as.character(substitute(var))%in%names(df)) stop("La variable no existe")
