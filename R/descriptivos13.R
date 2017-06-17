@@ -1376,7 +1376,9 @@ ponderar<-function (variables, pesos, vp, dif = 1, iter = 100, N) {
             break
     }
 if (!missing(N)) vp <- vp*(N/sum(vp,na.rm=T))
-    return(vp)
+cat("Total iteraciones alcanzadas: ",contador,"\n\n")
+print(lapply(variables,freq,w=vp))
+return(vp)
 }                        
                         
 varlab<-gtools::defmacro(df,var,val,
