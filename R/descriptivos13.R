@@ -1358,7 +1358,7 @@ ponderar<-function (variables, pesos, vp, dif = 1, iter = 100, N) {
         for (v in posicion) {
             vari <- variables[[v]]
             muestra <- tapply(vp, vari, sum, na.rm = T)
-            muestra<-prop.table(muestra)*100,
+            muestra<-prop.table(muestra)*100
             pes <- pesos[[v]]
             valores <- sort(unique(vari))
             for (i in 1:length(valores)) {
