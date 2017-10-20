@@ -1358,18 +1358,18 @@ ponderar<-function (variables, pesos, vp, dif = 1, iter = 100, N) {
         for (v in posicion) {
             vari <- variables[[v]]
             muestra <- tapply(vp, vari, sum, na.rm = T)
-            muestra<-round(prop.table(muestra)*100,1)
+            muestra<-prop.table(muestra)*100,
             pes <- pesos[[v]]
             valores <- sort(unique(vari))
             for (i in 1:length(valores)) {
                 vp[vari == valores[i]] <- vp[vari == valores[i]] * (pes[i]/muestra[i])
             }
         }
-        final <- lapply(variables, function(k) round(
-          prop.table(tapply(vp,k, sum, na.rm = T))*100, 1))
+        final <- lapply(variables, function(k) 
+          prop.table(tapply(vp,k, sum, na.rm = T))*100)
         condicion <- NULL
         for (i in 1:length(variables)) {
-          condicion <- c(condicion, all(abs(final[[i]] - pesos[[i]]) <= dif))
+          condicion <- c(condicion, all(abs(round(final[[i]],1) - pesos[[i]]) <= dif))
         }
         posicion <- which(condicion == F)
         if (contador == iter) 
