@@ -1416,8 +1416,11 @@ sumar<-function(...){
 }
 
 si<-function(test,yes,no){
-  test[is.na(test)]<-F
-  ifelse(test,yes, no)
+  atributos<-attributes(no)    
+  test[is.na(test)] <- F
+  valor<-ifelse(test, yes, no)
+  attributes(valor)<-atributos
+  return(valor)
 }
 
 nvalid<-function(x){
