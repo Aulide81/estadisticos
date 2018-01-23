@@ -889,7 +889,7 @@ spssdef<-function (df) {
     b <- sort(attr(df[[i]], "labels"))
     if(class(df[[i]])=="labelled") df[[i]]<-as.numeric(df[[i]])
     attr(df[[i]], "var.lab") <- a
-    if (is.null(a)) 
+    if (is.null(a) | length(a)>1) 
       attr(df[[i]], "var.lab") <- ""
     names(attr(df[[i]], "var.lab")) <- toupper(i)
     attr(df[[i]], "val.lab") <- b
