@@ -902,6 +902,7 @@ spssdef<-function (df) {
   }
     }
   attr(df, "variable.labels") <- NULL
+  names(df)<-tolower(names(df))
   return(df)
 }
 
