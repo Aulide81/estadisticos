@@ -417,7 +417,8 @@ filtro<-function (df, ...) {
     stop("La base de datos filtrada no contiene ninguna variable")
   indices <- names(df)[names(df) %in% names(bd)]
   copyattr <- function(x, y) {
-    attributes(y) <- attributes(x)
+    attr(y,"var.lab") <- attr(x,"var.lab")
+    attr(y,"val.lab") <- attr(x,"val.lab")
     return(y)
   }
   bd <- as.data.frame(mapply(copyattr, df[, indices,drop=F], bd[,indices,drop=F], 
@@ -882,7 +883,7 @@ attr(tabla,"dec")<-dec
 return(tabla)
 }
 
-spssdef<-function (df) { 
+spssdef<-function (df,to.data.frame=T) { 
   if ("tbl_df"%in%class(df)){
     for (i in names(df)) {
     a <- attr(df[[i]], "label")
@@ -903,6 +904,7 @@ spssdef<-function (df) {
     }
   attr(df, "variable.labels") <- NULL
   names(df)<-tolower(names(df))
+  if(to.data.frame==T) df<-as.data.frame(df)
   return(df)
 }
 
