@@ -1,25 +1,40 @@
-export.sav<-function(df,datafile,codefile,sep="\t",dec=",",na="",quote=T,drop.factor=F){
+# export.sav<-function(df,datafile,codefile,sep="\t",dec=",",na="",quote=T,drop.factor=F){
+#   
+#   if (drop.factor){
+#     variable<-NULL
+#     for (i in 1:ncol(df)){
+#       if (is.factor(df[,i])) variable<-c(variable,i)
+#     }
+#     df<-df[,-variable]
+#   }
+#   
+#   write.table(df,datafile,row.names=F,col.names=T,na=na,sep=sep,dec=dec,quote=quote)
+#   
+#   sink(codefile)
+#   for(i in 1:ncol(df)){
+#     if (!is.null(attr(df[,i],"var.lab"))) cat(paste("VAR LAB ",names(df[i]),"'",attr(df[,i],"var.lab"),"'.",sep=""),fill=T)
+#     if (!is.null(attr(df[,i],"val.lab"))){
+#       labels<-paste(list.val(df[,i])[,2],"'",list.val(df[,i])[,1],"'",sep="")
+#       cat(paste("VAL LAB",names(df)[i]),fill=T)
+#       cat(c(labels[-length(labels)],paste(labels[length(labels)],".",sep="")),fill=T)
+#     }
+#   }
+#   sink()
+# }
 
-if (drop.factor){
-    variable<-NULL
-    for (i in 1:ncol(df)){
-      if (is.factor(df[,i])) variable<-c(variable,i)
+export.sav<-function(df,path){
+  require(haven)
+  for(i in names(df)){
+    if(!is.null(attr(df[,i],"val.lab"))){
+      df[,i]<-labelled(df[,i],labels=attr(df[,i],"val.lab"))
+      attr(df[,i],"val.lab")<-NULL
     }
-    df<-df[,-variable]
-  }
-  
-write.table(df,datafile,row.names=F,col.names=T,na=na,sep=sep,dec=dec,quote=quote)
-
-sink(codefile)
-  for(i in 1:ncol(df)){
-    if (!is.null(attr(df[,i],"var.lab"))) cat(paste("VAR LAB ",names(df[i]),"'",attr(df[,i],"var.lab"),"'.",sep=""),fill=T)
-    if (!is.null(attr(df[,i],"val.lab"))){
-      labels<-paste(list.val(df[,i])[,2],"'",list.val(df[,i])[,1],"'",sep="")
-      cat(paste("VAL LAB",names(df)[i]),fill=T)
-      cat(c(labels[-length(labels)],paste(labels[length(labels)],".",sep="")),fill=T)
+    if(!is.null(attr(df[,i],"var.lab"))){
+      attr(df[,i],"label")<-attr(df[,i],"var.lab")
+      attr(df[,i],"var.lab")<-NULL
     }
   }
-  sink()
+  write_sav(df,path)
 }
 
 .weighted.var <- function(x,w,std=F) {
