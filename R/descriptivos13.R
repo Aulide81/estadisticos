@@ -934,6 +934,7 @@ spssdef<-function (df,to.data.frame=T) {
       attr(df[[i]], "var.lab") <- ""
     names(attr(df[[i]], "var.lab")) <- toupper(i)
     attr(df[[i]], "val.lab") <- b
+     }
 }else{
   stop("El archivo a definir debe proceder de la funcion haven::read_sav()")    
 }
