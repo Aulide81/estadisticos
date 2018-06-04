@@ -2,44 +2,24 @@
 \alias{export.sav}
 
 \title{
-Exportar de Rdata a SAV
+Exportar de data.frames a SAV
 }
 \description{
-Funcion que permite pasar archivos Rdata de variables numericas definidas a SAV
+Funcion que permite pasar data.frames a SAV
 }
 \usage{
-export.sav(df, datafile, codefile, sep = "\t", dec = ",", na = "", quote = T, drop.factor = F)
+export.sav(df, path)
 }
 
 \arguments{
   \item{df}{
-Data.frame con variables numericas definidas
+Data.frame
 }
-  \item{datafile}{
+  \item{path}{
 Nombre y ubicacion del archivo de datos
 }
-  \item{codefile}{
-Nombre y ubicacion del archivo de definicion
 }
-  \item{sep}{
-Delimitacion de las variables del archivo datafile
-}
-  \item{dec}{
-Representacion del signo decimal
-}
-  \item{na}{
-Codificacion de los valora ausentes (missings)
-}
-  \item{quote}{
-Valor logico.Los factores o variables string se grabaran entrecomillados? Por defecto quote=T
-}
-  \item{drop.factor}{
-Valor logico. Desea no exportar las variables string o factor? Por defecto drop.factor=F
-}
-}
-
 \author{
 Emilio Arenas
 }
-
 \keyword{export.sav}
