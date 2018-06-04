@@ -22,6 +22,31 @@
 #   sink()
 # }
 
+# spssdef<-function (df,to.data.frame=T) { 
+#   if ("tbl_df"%in%class(df)){
+#     for (i in names(df)) {
+#       a <- attr(df[[i]], "label")
+#       b <- sort(attr(df[[i]], "labels"))
+#       if(class(df[[i]])=="labelled") df[[i]]<-as.numeric(df[[i]])
+#       attr(df[[i]], "var.lab") <- a
+#       if (is.null(a) | length(a)>1) 
+#         attr(df[[i]], "var.lab") <- ""
+#       names(attr(df[[i]], "var.lab")) <- toupper(i)
+#       attr(df[[i]], "val.lab") <- b
+#     }
+#   }else{
+#     for (i in names(df)) {
+#       attr(df[, i], "var.lab") <- attributes(df)$variable.labels[i]
+#       attr(df[, i], "val.lab") <- sort(attr(df[, i], "value.labels"))
+#       attr(df[, i], "value.labels") <- NULL
+#     }
+#   }
+#   attr(df, "variable.labels") <- NULL
+#   names(df)<-tolower(names(df))
+#   if(to.data.frame==T) df<-as.data.frame(df)
+#   return(df)
+# }
+
 export.sav<-function(df,path){
   require(haven)
   for(i in names(df)){
@@ -909,15 +934,10 @@ spssdef<-function (df,to.data.frame=T) {
       attr(df[[i]], "var.lab") <- ""
     names(attr(df[[i]], "var.lab")) <- toupper(i)
     attr(df[[i]], "val.lab") <- b
+}else{
+  stop("El archivo a definir debe proceder de la funcion haven::read_sav()")    
 }
-  }else{
-  for (i in names(df)) {
-    attr(df[, i], "var.lab") <- attributes(df)$variable.labels[i]
-    attr(df[, i], "val.lab") <- sort(attr(df[, i], "value.labels"))
-    attr(df[, i], "value.labels") <- NULL
-  }
-    }
-  attr(df, "variable.labels") <- NULL
+  
   names(df)<-tolower(names(df))
   if(to.data.frame==T) df<-as.data.frame(df)
   return(df)
