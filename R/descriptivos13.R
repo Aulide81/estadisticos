@@ -929,7 +929,7 @@ spssdef<-function (df, to.data.frame = T){
         for (i in names(df)) {
             a <- attr(df[[i]], "label")
             b <- sort(attr(df[[i]], "labels"))
-            if (class(df[[i]]) == "labelled") 
+            if (class(df[[i]]) == "haven_labelled") 
                 df[[i]] <- as.numeric(df[[i]])
             attr(df[[i]], "var.lab") <- a
             if (is.null(a) | length(a) > 1) 
